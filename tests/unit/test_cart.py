@@ -18,6 +18,7 @@ pytestmark = [pytest.mark.django_db, pytest.mark.unit]
 def _make_session_request(rf, session_data=None):
     """Build a GET request with an attached session dict."""
     from django.contrib.sessions.backends.db import SessionStore
+
     request = rf.get("/")
     request.session = SessionStore()
     if session_data:
@@ -119,9 +120,7 @@ def test_remove_from_cart_view(client, product):
         reverse("orders:cart_add", kwargs={"product_id": product.id}),
         {"quantity": 1},
     )
-    response = client.post(
-        reverse("orders:cart_remove", kwargs={"product_id": product.id})
-    )
+    response = client.post(reverse("orders:cart_remove", kwargs={"product_id": product.id}))
     assert response.status_code in (200, 302)
 
 

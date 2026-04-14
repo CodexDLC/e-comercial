@@ -1,10 +1,12 @@
-import pytest
-from unittest.mock import MagicMock
 from decimal import Decimal
-from features.orders.services.order import OrderService
+from unittest.mock import MagicMock
+
+import pytest
+
 from features.orders.models.order import Order
 from features.orders.models.order_item import OrderItem
-from features.products.models import Product
+from features.orders.services.order import OrderService
+
 
 @pytest.mark.django_db
 @pytest.mark.unit
@@ -20,9 +22,9 @@ class TestOrderService:
                 "quantity": 1,
             }
         ]
-        
+
         initial_stock = product.stock
-        
+
         order = OrderService.create_order(
             user=user,
             cart=cart,
@@ -31,21 +33,21 @@ class TestOrderService:
             phone="+70000000000",
             address="Test Address",
         )
-        
+
         # Verify Order creation
         assert Order.objects.count() == 1
         assert order.total_price == Decimal("100.00")
         assert order.contact_phone == "+70000000000"
-        
+
         # Verify OrderItem creation
         assert OrderItem.objects.count() == 1
         item = OrderItem.objects.first()
         assert item.order == order
         assert item.product == product
-        
+
         # Verify Stock update
         product.refresh_from_db()
         assert product.stock == initial_stock - 1
-        
+
         # Verify Cart clear call
         cart.clear.assert_called_once()

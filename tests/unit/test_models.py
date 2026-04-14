@@ -59,9 +59,7 @@ def test_order_item_str(user, product):
         contact_phone="+0",
         total_price="30.00",
     )
-    item = OrderItem.objects.create(
-        order=order, product=product, quantity=2, price=product.price
-    )
+    item = OrderItem.objects.create(order=order, product=product, quantity=2, price=product.price)
     s = str(item)
     assert product.name in s
     assert "2" in s
@@ -75,9 +73,7 @@ def test_order_item_str_with_deleted_product(user):
         contact_phone="+0",
         total_price="0.00",
     )
-    item = OrderItem.objects.create(
-        order=order, product=None, quantity=1, price="5.00"
-    )
+    item = OrderItem.objects.create(order=order, product=None, quantity=1, price="5.00")
     s = str(item)
     assert "удаленный товар" in s
 
@@ -113,8 +109,12 @@ def test_product_str(product):
 def test_product_is_active_by_default(category):
     # ActiveMixin default is True — confirm via our fixture
     p = Product.objects.create(
-        name="Active P", slug="active-p", price="1.00",
-        stock=1, category=category, is_active=True,
+        name="Active P",
+        slug="active-p",
+        price="1.00",
+        stock=1,
+        category=category,
+        is_active=True,
     )
     assert p.is_active is True
 

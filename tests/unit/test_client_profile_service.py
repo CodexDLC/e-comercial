@@ -1,9 +1,10 @@
 import pytest
-from system.services.client_profile import ClientProfileService, ClientProfilePayload
-from system.models import UserProfile
 from django.contrib.auth import get_user_model
 
+from system.services.client_profile import ClientProfilePayload, ClientProfileService
+
 User = get_user_model()
+
 
 @pytest.mark.django_db
 @pytest.mark.unit
@@ -37,7 +38,7 @@ class TestClientProfileService:
         )
         success, message = ClientProfileService.save_profile(user, payload)
         assert success is True
-        
+
         user.refresh_from_db()
         profile = user.profile  # Assuming related_name='profile' or similar
         assert user.first_name == "Jane"

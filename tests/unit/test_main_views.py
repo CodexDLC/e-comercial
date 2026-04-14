@@ -54,6 +54,7 @@ def test_contacts_page_has_form(client):
 
 def test_contacts_post_valid_creates_message(client):
     from features.conversations.models import Message
+
     before = Message.objects.count()
     response = client.post(
         reverse("main:contacts"),
@@ -72,6 +73,7 @@ def test_contacts_post_valid_creates_message(client):
 
 def test_contacts_post_invalid_stays_on_page(client):
     from features.conversations.models import Message
+
     before = Message.objects.count()
     response = client.post(
         reverse("main:contacts"),

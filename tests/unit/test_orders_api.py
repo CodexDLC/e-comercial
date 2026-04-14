@@ -1,8 +1,10 @@
 import pytest
 from django.urls import reverse
 from rest_framework import status
+
 from features.orders.models.order import Order
 from features.orders.models.order_item import OrderItem
+
 
 @pytest.mark.django_db
 class TestOrdersAPI:
@@ -25,20 +27,19 @@ class TestOrdersAPI:
     def test_create_order_with_items(self, auth_client, product):
         # Add to cart first (using session-based cart via API)
         auth_client.post(reverse("cart-add"), {"product_id": product.id, "quantity": 2})
-        
+
         url = reverse("order-list")
-        data = {
-            "shipping_address": "123 Main St",
-            "contact_phone": "+123456789"
-        }
+        data = {"shipping_address": "123 Main St", "contact_phone": "+123456789"}
         response = auth_client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
-        
+
         order = Order.objects.get(id=response.data["id"])
         assert order.shipping_address == "123 Main St"
         from decimal import Decimal
+
         assert order.total_price == Decimal(product.price) * 2
         assert OrderItem.objects.filter(order=order).count() == 1
+
 
 @pytest.mark.django_db
 class TestCartAPI:
@@ -47,12 +48,12 @@ class TestCartAPI:
         response = client.get(reverse("cart-list"))
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {}
-        
+
         # Add item
         response = client.post(reverse("cart-add"), {"product_id": product.id, "quantity": 3})
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {str(product.id): 3}
-        
+
         # Remove item
         response = client.post(reverse("cart-remove"), {"product_id": product.id})
         assert response.status_code == status.HTTP_200_OK

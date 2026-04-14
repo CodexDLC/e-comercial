@@ -10,23 +10,17 @@ User = get_user_model()
 
 
 def test_login_ok(client, user):
-    response = client.post(reverse("account_login"), {
-        "login": "testuser", "password": "testpass123"
-    })
+    response = client.post(reverse("account_login"), {"login": "testuser", "password": "testpass123"})
     assert response.status_code in (200, 302)
 
 
 def test_login_wrong_password(client, user):
-    response = client.post(reverse("account_login"), {
-        "login": "testuser", "password": "wrong"
-    })
+    response = client.post(reverse("account_login"), {"login": "testuser", "password": "wrong"})
     assert response.status_code == 200  # stays on login page
 
 
 def test_login_unknown_user(client):
-    response = client.post(reverse("account_login"), {
-        "login": "nobody", "password": "anything"
-    })
+    response = client.post(reverse("account_login"), {"login": "nobody", "password": "anything"})
     assert response.status_code == 200
 
 

@@ -52,18 +52,21 @@ def test_duplicate_review_rejected(auth_client, product, user):
 
 
 def test_review_str(product, user):
-    review = Review.objects.create(
-        product=product, user=user, rating=5, comment="Nice"
-    )
+    review = Review.objects.create(product=product, user=user, rating=5, comment="Nice")
     expected = f"Отзыв на {product.name} от {user.username}"
     assert str(review) == expected
 
 
 def test_review_for_inactive_product_returns_404(auth_client, category):
     from features.products.models import Product
+
     inactive = Product.objects.create(
-        name="Inactive P", slug="inactive-p", price="1.00",
-        stock=10, category=category, is_active=False,
+        name="Inactive P",
+        slug="inactive-p",
+        price="1.00",
+        stock=10,
+        category=category,
+        is_active=False,
     )
     response = auth_client.post(
         reverse("reviews:add", kwargs={"product_id": inactive.id}),

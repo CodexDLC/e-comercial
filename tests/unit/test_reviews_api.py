@@ -1,7 +1,9 @@
 import pytest
 from django.urls import reverse
 from rest_framework import status
+
 from features.reviews.models.review import Review
+
 
 @pytest.mark.django_db
 class TestReviewsAPI:
@@ -15,12 +17,10 @@ class TestReviewsAPI:
         assert len(results) == 1
 
     def test_filter_reviews_by_product(self, client, product, user, category):
-        p2 = product.__class__.objects.create(
-            name="Other", slug="other", price=10, category=category
-        )
+        p2 = product.__class__.objects.create(name="Other", slug="other", price=10, category=category)
         Review.objects.create(product=product, user=user, rating=5)
         Review.objects.create(product=p2, user=user, rating=4)
-        
+
         url = reverse("review-list")
         response = client.get(url, {"product_id": product.id})
         # Handle potential pagination

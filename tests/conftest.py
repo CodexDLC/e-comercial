@@ -1,7 +1,6 @@
+import pytest
 import redis
 import redis.asyncio
-
-import pytest
 from django.contrib.auth import get_user_model
 from fakeredis import FakeAsyncRedis, FakeRedis
 
@@ -24,9 +23,7 @@ redis.asyncio.from_url = FakeAsyncRedis.from_url
 
 @pytest.fixture
 def user(db):
-    return get_user_model().objects.create_user(
-        username="testuser", password="testpass123", email="test@test.com"
-    )
+    return get_user_model().objects.create_user(username="testuser", password="testpass123", email="test@test.com")
 
 
 @pytest.fixture

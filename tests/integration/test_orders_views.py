@@ -1,7 +1,10 @@
 from decimal import Decimal
+
 import pytest
 from django.urls import reverse
+
 from features.orders.models import Order, OrderItem
+
 
 @pytest.mark.unit
 @pytest.mark.django_db
@@ -10,7 +13,7 @@ class TestOrdersViews:
         url = reverse("orders:cart_add", kwargs={"product_id": product.id})
         response = client.post(url, {"quantity": 2})
         assert response.status_code == 302  # Redirects to cart
-        
+
         # Check session
         cart = client.session.get("cart", {})
         assert str(product.id) in cart
@@ -21,7 +24,7 @@ class TestOrdersViews:
         s = client.session
         s["cart"] = {str(product.id): {"quantity": 5, "price": str(product.price)}}
         s.save()
-        
+
         url = reverse("orders:cart_remove", kwargs={"product_id": product.id})
         response = client.post(url)
         assert response.status_code == 302
@@ -38,25 +41,20 @@ class TestOrdersViews:
         s = client.session
         s["cart"] = {str(product.id): {"quantity": 1, "price": str(product.price)}}
         s.save()
-        
+
         client.force_login(user)
         url = reverse("orders:checkout")
-        data = {
-            "full_name": "Test User",
-            "email": "test@example.com",
-            "phone": "123456789",
-            "address": "Test Street 1"
-        }
+        data = {"full_name": "Test User", "email": "test@example.com", "phone": "123456789", "address": "Test Street 1"}
         response = client.post(url, data)
         assert response.status_code == 302
-        
+
         # Verify order created
         order = Order.objects.first()
         assert order is not None
         assert order.user == user
         assert order.total_price == Decimal(str(product.price))
         assert OrderItem.objects.filter(order=order).count() == 1
-        
+
         # Verify stock update
         product.refresh_from_db()
         assert product.stock == 99  # Assuming initial was 100
@@ -66,7 +64,7 @@ class TestOrdersViews:
         s = client.session
         s["cart"] = {str(product.id): {"quantity": 1, "price": str(product.price)}}
         s.save()
-        
+
         url = reverse("orders:checkout")
         data = {"full_name": "Test User"}  # Missing others
         response = client.post(url, data)

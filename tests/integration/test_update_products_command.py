@@ -14,13 +14,15 @@ pytestmark = [pytest.mark.django_db, pytest.mark.unit]
 def _write_category_fixture(tmp_path, pk, name, slug):
     fixture_path = tmp_path / "categories.json"
     fixture_path.write_text(
-        json.dumps([
-            {
-                "model": "products.category",
-                "pk": pk,
-                "fields": {"name": name, "slug": slug},
-            }
-        ]),
+        json.dumps(
+            [
+                {
+                    "model": "products.category",
+                    "pk": pk,
+                    "fields": {"name": name, "slug": slug},
+                }
+            ]
+        ),
         encoding="utf-8",
     )
     return fixture_path
@@ -99,10 +101,11 @@ def test_upsert_product_skips_unknown_category(tmp_path):
     category_map = CatalogImportService.build_category_map(fixture_categories)
 
     from django.core.management.base import CommandError
+
     with pytest.raises(CommandError, match="could not be resolved"):
         CatalogImportService.upsert_product(
             {
-                "category": 1,   # pk=1 NOT in fixture above (99 is)
+                "category": 1,  # pk=1 NOT in fixture above (99 is)
                 "name": "Ghost Product",
                 "slug": "ghost-product",
                 "description": "",
@@ -122,23 +125,25 @@ def test_handle_import_success(tmp_path, settings):
     cat_fixture = _write_category_fixture(tmp_path, 1, "Category", "cat")
     prod_fixture = tmp_path / "products.json"
     prod_fixture.write_text(
-        json.dumps([
-            {
-                "model": "products.product",
-                "pk": 1,
-                "fields": {
-                    "category": 1,
-                    "name": "Prod 1",
-                    "slug": "prod-1",
-                    "description": "Desc",
-                    "price": "10.00",
-                    "stock": 10,
-                    "is_active": True,
-                    "order": 1,
-                    "specifications": {},
-                },
-            }
-        ]),
+        json.dumps(
+            [
+                {
+                    "model": "products.product",
+                    "pk": 1,
+                    "fields": {
+                        "category": 1,
+                        "name": "Prod 1",
+                        "slug": "prod-1",
+                        "description": "Desc",
+                        "price": "10.00",
+                        "stock": 10,
+                        "is_active": True,
+                        "order": 1,
+                        "specifications": {},
+                    },
+                }
+            ]
+        ),
         encoding="utf-8",
     )
 

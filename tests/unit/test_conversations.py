@@ -128,5 +128,6 @@ def test_contact_form_view_post_creates_message(client):
 
 def test_selector_import():
     """Ensure selector module is importable (smoke test for 0% coverage files)."""
-    from features.conversations.selector import messages as sel  # noqa: F401
+    from features.conversations.selector import messages as sel
+
     assert sel is not None

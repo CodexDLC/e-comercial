@@ -34,12 +34,20 @@ def test_product_detail_not_found(client):
 
 def test_catalog_shows_active_products_only(client, category):
     active = Product.objects.create(
-        name="Active", slug="active-product", price="10.00",
-        stock=5, category=category, is_active=True,
+        name="Active",
+        slug="active-product",
+        price="10.00",
+        stock=5,
+        category=category,
+        is_active=True,
     )
     inactive = Product.objects.create(
-        name="Inactive", slug="inactive-product", price="10.00",
-        stock=5, category=category, is_active=False,
+        name="Inactive",
+        slug="inactive-product",
+        price="10.00",
+        stock=5,
+        category=category,
+        is_active=False,
     )
     response = client.get(reverse("products:list"))
     content = response.content.decode()
@@ -60,8 +68,12 @@ def test_catalog_empty(client, category):
 
 def test_catalog_search_by_name(client, category):
     p = Product.objects.create(
-        name="Unique Citra", slug="unique-citra", price="9.00",
-        stock=10, category=category, is_active=True,
+        name="Unique Citra",
+        slug="unique-citra",
+        price="9.00",
+        stock=10,
+        category=category,
+        is_active=True,
     )
     response = client.get(reverse("products:list"), {"q": "Unique Citra"})
     assert response.status_code == 200
@@ -70,8 +82,12 @@ def test_catalog_search_by_name(client, category):
 
 def test_catalog_search_excludes_non_matching(client, category):
     Product.objects.create(
-        name="Galaxy Hops", slug="galaxy-hops", price="8.00",
-        stock=5, category=category, is_active=True,
+        name="Galaxy Hops",
+        slug="galaxy-hops",
+        price="8.00",
+        stock=5,
+        category=category,
+        is_active=True,
     )
     response = client.get(reverse("products:list"), {"q": "ZZZ_nomatch_ZZZ"})
     assert response.status_code == 200
@@ -81,8 +97,12 @@ def test_catalog_search_excludes_non_matching(client, category):
 def test_catalog_filter_by_category(client, category):
     other_cat = Category.objects.create(name="Yeast", slug="yeast")
     p_in = Product.objects.create(
-        name="Ale Yeast", slug="ale-yeast", price="5.00",
-        stock=20, category=other_cat, is_active=True,
+        name="Ale Yeast",
+        slug="ale-yeast",
+        price="5.00",
+        stock=20,
+        category=other_cat,
+        is_active=True,
     )
     response = client.get(reverse("products:list"), {"category": "yeast"})
     assert response.status_code == 200
@@ -161,16 +181,17 @@ def test_category_str(category):
 
 def test_product_default_stock_is_zero(category):
     p = Product(
-        name="No Stock", slug="no-stock", price="5.00",
-        category=category, is_active=True,
+        name="No Stock",
+        slug="no-stock",
+        price="5.00",
+        category=category,
+        is_active=True,
     )
     assert p.stock == 0
 
 
 def test_category_parent_relationship(category):
-    child = Category.objects.create(
-        name="Child Cat", slug="child-cat", parent=category
-    )
+    child = Category.objects.create(name="Child Cat", slug="child-cat", parent=category)
     assert child.parent == category
     assert child in list(category.children.all())
 

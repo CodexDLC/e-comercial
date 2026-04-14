@@ -60,19 +60,12 @@ def test_checkout_without_required_fields(auth_client, product):
 def test_checkout_deducts_stock_for_multiple_items(auth_client, category):
     """All items in cart must have their stock decremented."""
     from features.products.models import Product
-    p1 = Product.objects.create(
-        name="P1", slug="p1", price="10.00", stock=50, category=category, is_active=True
-    )
-    p2 = Product.objects.create(
-        name="P2", slug="p2", price="20.00", stock=30, category=category, is_active=True
-    )
 
-    auth_client.post(
-        reverse("orders:cart_add", kwargs={"product_id": p1.id}), {"quantity": 3}
-    )
-    auth_client.post(
-        reverse("orders:cart_add", kwargs={"product_id": p2.id}), {"quantity": 2}
-    )
+    p1 = Product.objects.create(name="P1", slug="p1", price="10.00", stock=50, category=category, is_active=True)
+    p2 = Product.objects.create(name="P2", slug="p2", price="20.00", stock=30, category=category, is_active=True)
+
+    auth_client.post(reverse("orders:cart_add", kwargs={"product_id": p1.id}), {"quantity": 3})
+    auth_client.post(reverse("orders:cart_add", kwargs={"product_id": p2.id}), {"quantity": 2})
 
     auth_client.post(
         reverse("orders:checkout"),
