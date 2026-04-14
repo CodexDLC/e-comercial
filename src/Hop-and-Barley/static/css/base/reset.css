@@ -1,0 +1,31 @@
+
+/* Extracted from main.css */
+/* Base styles */
+body {
+    font-family: var(--font-family);
+    color: var(--black-main);
+    background-color: var(--background);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+/* Container */
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 64px;
+}

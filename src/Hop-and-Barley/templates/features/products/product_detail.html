@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ product.name }} | Hop & Barley{% endblock title %}
+
+{% block content %}
+<main class="page-product">
+  <div class="container">
+    <!-- Product Info Section -->
+    <section class="product-details-section">
+      <div class="product-image-container">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+        {% else %}
+            <img src="{% static 'img/products/default.jpg' %}" alt="{{ product.name }}" class="product-image">
+        {% endif %}
+      </div>
+      <div class="product-info-column">
+        <div class="product-title-price">
+          <h1 class="product-name">{{ product.name }}</h1>
+          <div class="price-section">
+            <span class="price-tag">per unit</span>
+            <p class="product-price">${{ product.price }}</p>
+          </div>
+        </div>
+        <div class="product-description">
+            {{ product.description|safe }}
+        </div>
+        <form action="{% url 'orders:cart_add' product.id %}" method="post" class="cart-controls">
+          {% csrf_token %}
+          <div class="quantity-input-wrapper" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <label for="quantity" style="font-weight: 600; color: var(--text-muted);">{% trans "Quantity:" %}</label>
+            <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.stock }}"
+                   style="width: 70px; padding: 0.5rem; border-radius: 8px; border: 1px solid var(--border-color); font-weight: 700; text-align: center;">
+          </div>
+          <button type="submit" class="button button--primary add-to-cart-button" id="add-to-cart-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1.25rem;">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span>{% trans "Add to Cart" %}</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Technical Specifications Accordion -->
+    <section class="accordion-section">
+      <div class="accordion-item">
+        <div class="accordion-title">
+          <h3>Technical Specifications</h3>
+          <i class="fa-solid fa-chevron-down accordion-icon"></i>
+        </div>
+        <div class="accordion-content">
+          <ul>
+            {% if product.category %}
+                <li><strong>Category:</strong> {{ product.category.name }}</li>
+            {% endif %}
+            {% for key, value in product.specifications.items %}
+                <li><strong>{{ key }}:</strong> {{ value }}</li>
+            {% endfor %}
+            <li><strong>SKU:</strong> {{ product.slug }}</li>
+            <li><strong>Stock:</strong> {% if product.stock > 0 %}In Stock ({{ product.stock }}){% else %}Out of Stock{% endif %}</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latest Reviews Section -->
+    <section class="reviews-section" id="reviews-section">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+        <h2 class="reviews-title">Latest reviews</h2>
+        {% if not user.is_authenticated %}
+          <button type="button" class="button button--secondary"
+                  data-bs-toggle="modal" data-bs-target="#authModal">
+            <i class="fa-regular fa-star" style="margin-right:6px;"></i>Leave a review
+          </button>
+        {% elif has_review %}
+          <span style="color:var(--grey-text); font-size:14px;">
+            <i class="fa-solid fa-check" style="color:#4CAF50; margin-right:4px;"></i>You have already left a review
+          </span>
+        {% else %}
+          <button type="button" class="button button--secondary"
+                  data-bs-toggle="modal" data-bs-target="#reviewModal">
+            <i class="fa-regular fa-star" style="margin-right:6px;"></i>Leave a review
+          </button>
+        {% endif %}
+      </div>
+
+      <div class="reviews-grid">
+        {% for review in product.reviews.all|slice:":3" %}
+        <div class="review-card">
+          <div class="review-rating">
+            {% for i in "12345"|make_list %}
+              {% if forloop.counter <= review.rating %}
+                <i class="fa-solid fa-star"></i>
+              {% else %}
+                <i class="fa-regular fa-star"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="review-body">
+            <p class="review-text">{{ review.comment }}</p>
+          </div>
+          <div class="review-author">
+            <span class="author-name">{{ review.user.username }}</span>
+          </div>
+        </div>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- Auth Modal (for non-authenticated users) -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:12px; border:1px solid var(--border-default);">
+      <div class="modal-header" style="border-bottom:1px solid var(--border-default); padding:24px 24px 16px;">
+        <h5 class="modal-title" id="authModalLabel" style="font-weight:600; font-size:18px;">
+          <i class="fa-regular fa-star" style="color:#FFC107; margin-right:8px;"></i>Leave a review
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:24px; text-align:center;">
+        <p style="color:var(--grey-text); margin-bottom:24px; font-size:15px;">
+          To leave a review, please sign in to your account or create a new one.
+        </p>
+        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <a href="{% url 'account_login' %}" class="button button--primary" style="min-width:140px;">
+            <i class="fa-solid fa-right-to-bracket" style="margin-right:6px;"></i>Sign In
+          </a>
+          <a href="{% url 'account_login' %}" class="button button--secondary" style="min-width:140px;">
+            <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i>Register
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if user.is_authenticated and not has_review %}
+<!-- Review Form Modal (for authenticated users without a review) -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:12px; border:1px solid var(--border-default);">
+      <div class="modal-header" style="border-bottom:1px solid var(--border-default); padding:24px 24px 16px;">
+        <h5 class="modal-title" id="reviewModalLabel" style="font-weight:600; font-size:18px;">
+          <i class="fa-regular fa-star" style="color:#FFC107; margin-right:8px;"></i>Leave a review
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:24px;">
+        <form id="review-form"
+              hx-post="{% url 'reviews:add' product.id %}"
+              hx-target="#reviews-section"
+              hx-swap="outerHTML"
+              hx-on::after-request="if(event.detail.successful){ bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide(); }">
+          {% csrf_token %}
+
+          <!-- Star Rating -->
+          <div style="margin-bottom:20px;">
+            <label style="display:block; font-weight:600; margin-bottom:12px; font-size:14px; color:var(--text-muted);">Your Rating</label>
+            <div class="review-star-picker" style="display:flex; gap:8px; flex-direction:row-reverse; justify-content:flex-end;">
+              {% for val in "54321"|make_list %}
+              <label style="cursor:pointer; font-size:28px; color:#FFC107;">
+                <input type="radio" name="rating" value="{{ val }}" required style="display:none;">
+                <i class="fa-regular fa-star review-star-icon"></i>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Comment -->
+          <div style="margin-bottom:24px;">
+            <label for="review-comment" style="display:block; font-weight:600; margin-bottom:8px; font-size:14px; color:var(--text-muted);">Your Review</label>
+            <textarea id="review-comment" name="comment" rows="4" required
+                      placeholder="Share your experience with this product..."
+                      style="width:100%; padding:12px 14px; border-radius:8px; border:1px solid var(--border-default); font-size:15px; resize:vertical; font-family:inherit; background:var(--background-default); color:var(--black-main);"></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:12px;">
+            <button type="button" class="button button--secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="button button--primary">
+              <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Submit Review
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.review-star-picker input:checked ~ label .review-star-icon,
+.review-star-picker label:hover ~ label .review-star-icon,
+.review-star-picker label:hover .review-star-icon {
+  font-weight: 900;
+}
+.review-star-picker input[type="radio"]:checked + .review-star-icon::before,
+.review-star-picker label:has(input:checked) .review-star-icon,
+.review-star-picker label:has(input:checked) ~ label .review-star-icon {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f005";
+}
+
+/* CSS-only star rating: fill stars from selected to left (row-reverse trick) */
+.review-star-picker {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+.review-star-picker label:hover .review-star-icon::before,
+.review-star-picker label:hover ~ label .review-star-icon::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f005";
+}
+.review-star-picker input:checked ~ label .review-star-icon::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f005";
+}
+</style>
+{% endif %}
+{% endblock %}

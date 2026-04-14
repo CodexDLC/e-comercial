@@ -1,0 +1,299 @@
+[
+  {
+    "model": "products.product",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Citra Hops",
+      "slug": "citra-hops",
+      "description": "Citra is one of the most sought-after and recognizable hop varieties in the world of craft brewing, famous for its bright and multifaceted citrus aroma. It imparts notes of grapefruit, lime, passion fruit, lychee, and melon to beer, creating a unique tropical bouquet.",
+      "price": "5.99",
+      "stock": 100,
+      "is_active": true,
+      "order": 1,
+      "image": "products/citra_hops.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Origin": "USA",
+        "Type": "Aroma (Dual-Purpose)",
+        "Alpha Acids": "11.0% - 13.0%",
+        "Beta Acids": "3.0% - 4.5%",
+        "Aroma Profile": "Grapefruit, Lime, Passion Fruit, Lychee, Melon",
+        "Usage": "Late Kettle Addition, Dry Hopping",
+        "Recommended Beer Styles": "IPA, Double IPA, Pale Ale, American Wheat"
+      }
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 2,
+    "fields": {
+      "category": 2,
+      "name": "Maris Otter Pale Malt",
+      "slug": "maris-otter-pale-malt",
+      "description": "Maris Otter Pale Malt is the cornerstone of British brewing heritage, a revered base malt prized by brewers worldwide for its exceptional quality and flavor. It provides a rich, slightly sweet, and biscuity malt backbone.",
+      "price": "2.50",
+      "stock": 500,
+      "is_active": true,
+      "order": 1,
+      "image": "products/maris_otter_malt.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {}
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 3,
+    "fields": {
+      "category": 3,
+      "name": "SafAle US-05 Dry Ale Yeast",
+      "slug": "safale-us-05-dry-ale-yeast",
+      "description": "The most famous and popular American ale yeast in the world. It provides a clean, crisp beer with a neutral flavor profile, allowing the hop and malt character to shine through.",
+      "price": "3.25",
+      "stock": 200,
+      "is_active": true,
+      "order": 1,
+      "image": "products/safale_us05_yeast.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {}
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 4,
+    "fields": {
+      "category": 4,
+      "name": "West Coast IPA - All-Grain Kit",
+      "slug": "west-coast-ipa-all-grain-kit",
+      "description": "Brew a craft brewing classic! This kit contains all the necessary ingredients to create a bright, bitter, and incredibly aromatic IPA in the style of the US West Coast. Includes Centennial, Simcoe, and Columbus hops.",
+      "price": "60.00",
+      "stock": 50,
+      "is_active": true,
+      "order": 1,
+      "image": "products/ipa_kit.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {}
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 5,
+    "fields": {
+      "category": 1,
+      "name": "Cascade Hops",
+      "slug": "cascade-hops",
+      "description": "Classic American aroma hop with floral and citrus (grapefruit) notes. Perfect for APA and IPA.",
+      "price": "4.50",
+      "stock": 150,
+      "is_active": true,
+      "order": 2,
+      "image": "products/cascade_hops.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Origin": "USA",
+        "Type": "Aroma (Dual-Purpose)",
+        "Alpha Acids": "4.5% - 7.0%",
+        "Beta Acids": "4.5% - 7.0%",
+        "Aroma Profile": "Medium-intensity floral, citrus (grapefruit), and spicy notes.",
+        "Cohumulone": "33% - 40%",
+        "Total Oil": "0.8 - 1.5 mL/100g",
+        "Recommended Beer Styles": "American Pale Ale, IPA, Porter, Barleywine, Witbier"
+      }
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 6,
+    "fields": {
+      "category": 2,
+      "name": "Caramel Malt 60L",
+      "slug": "caramel-malt",
+      "description": "Caramel Malt 60L (Crystal 60L) is a versatile specialty malt that enhances beer color, flavor, and body. It imparts a copper-amber hue and notes of caramel and toffee.",
+      "price": "3.00",
+      "stock": 300,
+      "is_active": true,
+      "order": 2,
+      "image": "products/caramel_malt.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Origin": "USA / Belgium",
+        "Type": "Crystal/Caramel Malt",
+        "Color (°L)": "60 °L",
+        "Moisture": "5.0% max",
+        "Extract FG, Dry": "75%",
+        "Flavor Profile": "Sweet, caramel, toffee, hints of toasted bread",
+        "Usage": "Typically 3-15% of the grist",
+        "Recommended Beer Styles": "Pale Ale, Amber Ale, IPA, Brown Ale, Porter, Stout, Scotch Ale"
+      }
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 7,
+    "fields": {
+      "category": 1,
+      "name": "Centennial Hops",
+      "slug": "centennial-hops",
+      "description": "Known as 'Super Cascade' due to its powerful citrus profile with bright notes of lemon and grapefruit. Excellent for both bittering and intense aroma.",
+      "price": "6.20",
+      "stock": 120,
+      "is_active": true,
+      "order": 3,
+      "image": "products/centennial_hops.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Origin": "USA",
+        "Type": "Dual-Purpose",
+        "Alpha Acids": "9.0% - 11.5%",
+        "Beta Acids": "3.5% - 4.5%",
+        "Aroma Profile": "Intense floral and citrus (lemon, grapefruit).",
+        "Cohumulone": "28% - 30%",
+        "Total Oil": "1.5 - 2.5 mL/100g",
+        "Recommended Beer Styles": "All US Ale styles, especially IPA, Double IPA, and American Pale Ale."
+      }
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 8,
+    "fields": {
+      "category": 3,
+      "name": "Imperial Organic Yeast A07",
+      "slug": "imperial-yeast",
+      "description": "Flagship liquid yeast with ~200 billion cells per pouch. Reliable, clean, and produces balanced ales with a soft mouthfeel. No starter required.",
+      "price": "8.99",
+      "stock": 80,
+      "is_active": true,
+      "order": 2,
+      "image": "products/imperial_yeast.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Strain Type": "Ale",
+        "Flocculation": "Medium",
+        "Attenuation": "73-77%",
+        "Temperature Range": "62-72°F (17-22°C)",
+        "Alcohol Tolerance": "10% ABV",
+        "Flavor Profile": "Balanced, slightly fruity, hints of citrus and stone fruit.",
+        "Cell Count": "~200 Billion Cells",
+        "Recommended Beer Styles": "American Pale Ale, IPA, Double IPA, Porter, Stout, Amber Ale"
+      }
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 9,
+    "fields": {
+      "category": 1,
+      "name": "Mosaic Hops",
+      "slug": "mosaic-hops",
+      "description": "One of the most complex hops available. Imparts tropical fruit, berry, citrus, and herbal notes. Ideal for dry hopping in Hazy IPAs.",
+      "price": "9.50",
+      "stock": 100,
+      "is_active": true,
+      "order": 4,
+      "image": "products/mosaic_hops.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Origin": "USA",
+        "Type": "Dual-Purpose",
+        "Alpha Acids": "11.5% - 13.5%",
+        "Beta Acids": "3.2% - 3.9%",
+        "Aroma Profile": "Complex and multifaceted. Tropical fruit (mango, guava), citrus (tangerine), berry (blueberry), stone fruit (peach), pine, and earthy notes.",
+        "Cohumulone": "24% - 26%",
+        "Total Oil": "1.0 - 1.5 mL/100g",
+        "Recommended Beer Styles": "IPA, Double IPA, Hazy/NEIPA, American Pale Ale, Session IPA."
+      }
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 10,
+    "fields": {
+      "category": 2,
+      "name": "Pilsner Malt",
+      "slug": "pilsner-malt",
+      "description": "The lightest base malt, produced from high-quality two-row barley. Imparts a straw-like color and clean, grainy flavor. Foundation for classic lagers.",
+      "price": "2.20",
+      "stock": 1000,
+      "is_active": true,
+      "order": 3,
+      "image": "products/pilsner_malt.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Origin": "Germany / Belgium",
+        "Type": "Base Malt",
+        "Color (°L)": "1.5 - 2.1 °L",
+        "Moisture": "4.5% max",
+        "Protein": "10.0% - 11.5%",
+        "Diastatic Power": "> 100 °Lintner",
+        "Flavor Profile": "Clean, light, sweet, grainy",
+        "Usage": "Up to 100% of the grist",
+        "Recommended Beer Styles": "Pilsner, Helles, Kolsch, Belgian Tripel, Light Lagers, Saison"
+      }
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 11,
+    "fields": {
+      "category": 1,
+      "name": "Saaz Hops",
+      "slug": "saaz-hops",
+      "description": "Noble hop from the Czech Republic. Delicate, spicy, and earthy aroma. Professional choice for authentic Bohemian Pilsners.",
+      "price": "4.75",
+      "stock": 200,
+      "is_active": true,
+      "order": 5,
+      "image": "products/saaz_hops.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Origin": "Czech Republic",
+        "Type": "Aroma",
+        "Alpha Acids": "2.0% - 5.0%",
+        "Beta Acids": "4.5% - 8.0%",
+        "Aroma Profile": "Mild, pleasant, earthy, spicy, and floral.",
+        "Cohumulone": "23% - 28%",
+        "Total Oil": "0.4 - 1.0 mL/100g",
+        "Recommended Beer Styles": "Bohemian Pilsner, German Pilsner, Light Lagers, Belgian Ales, Lambic"
+      }
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 12,
+    "fields": {
+      "category": 2,
+      "name": "Unmalted Wheat",
+      "slug": "unmalted-wheat",
+      "description": "Secret ingredient for Belgian Witbiers. Raw grain that provides a unique silky body and characteristic light haze. High protein for great head retention.",
+      "price": "1.80",
+      "stock": 400,
+      "is_active": true,
+      "order": 4,
+      "image": "products/unmalted_wheat.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "specifications": {
+        "Origin": "Belgium / USA",
+        "Type": "Unmalted Adjunct",
+        "Color (°L)": "~2.0 °L",
+        "Moisture": "12% max",
+        "Protein": "High (contributes to haze and head retention)",
+        "Flavor Profile": "Neutral, subtle raw grain, bready",
+        "Usage": "Typically 30-50% of the grist for Witbiers. Requires a cereal mash or a mash with high diastatic power malts (like Pilsner or 6-Row).",
+        "Recommended Beer Styles": "Belgian Witbier, Lambic, Grand Cru, certain Saisons."
+      }
+    }
+  }
+]

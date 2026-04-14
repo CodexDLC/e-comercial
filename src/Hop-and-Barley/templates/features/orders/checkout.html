@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Checkout" %} | Hop & Barley{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --checkout-bg: #f8fafc;
+        --card-bg: #ffffff;
+        --accent-emerald: #10b981;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+        --input-focus: rgba(16, 185, 129, 0.15);
+    }
+
+    .checkout-page-wrapper {
+        min-height: 80vh;
+        padding: 4rem 1rem;
+        background-color: var(--checkout-bg);
+        color: var(--text-main);
+    }
+
+    .checkout-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .checkout-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 3rem;
+        text-align: center;
+        letter-spacing: -0.025em;
+    }
+
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 3rem;
+        align-items: start;
+    }
+
+    @media (max-width: 850px) {
+        .checkout-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .checkout-main {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .checkout-section {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .section-title i {
+        color: var(--accent-emerald);
+    }
+
+    /* Form Styles */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-group--full { grid-column: span 2; }
+
+    .label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .input-field {
+        width: 100%;
+        background: #fbfcfd;
+        border: 1.5px solid var(--border-color);
+        border-radius: 10px;
+        padding: 0.85rem 1rem;
+        color: var(--text-main);
+        font-family: inherit;
+        transition: all 0.2s ease;
+    }
+
+    .input-field:focus {
+        outline: none;
+        border-color: var(--accent-emerald);
+        box-shadow: 0 0 0 4px var(--input-focus);
+    }
+
+    /* Summary Sidebar */
+    .checkout-summary {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 2rem;
+    }
+
+    .summary-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+    }
+
+    .summary-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.95rem;
+        color: var(--text-muted);
+    }
+
+    .summary-item--total {
+        color: var(--text-main);
+        font-weight: 800;
+        font-size: 1.3rem;
+    }
+
+    .pay-btn {
+        display: block;
+        width: 100%;
+        padding: 1.25rem;
+        background: var(--accent-emerald);
+        border: none;
+        color: #fff;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+        transition: transform 0.2s;
+    }
+
+    .pay-btn:hover {
+        transform: scale(1.02);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="checkout-page-wrapper">
+    <div class="checkout-container">
+        <h1 class="checkout-title">{% trans "Complete Your Order" %}</h1>
+
+        <form method="post" action="." class="checkout-grid">
+            {% csrf_token %}
+
+            <div class="checkout-main">
+                <section class="checkout-section">
+                    <h2 class="section-title"><i class="fas fa-shipping-fast"></i> {% trans "Shipping Details" %}</h2>
+                    <div class="form-grid">
+                        <div class="form-group form-group--full">
+                            <label class="label">{% trans "Full Name" %}</label>
+                            <input type="text" name="full_name" class="input-field" placeholder="{% trans 'e.g., John Smith' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">{% trans "Email Address" %}</label>
+                            <input type="email" name="email" class="input-field" placeholder="john@example.com" value="{{ user.email }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">{% trans "Phone Number" %}</label>
+                            <input type="tel" name="phone" class="input-field" placeholder="+7 999 888 77 66" required>
+                        </div>
+                        <div class="form-group form-group--full">
+                            <label class="label">{% trans "Delivery Address" %}</label>
+                            <textarea name="address" class="input-field" style="min-height: 100px;" placeholder="{% trans 'Street, House, Apartment, Index' %}" required></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="checkout-section">
+                    <h2 class="section-title"><i class="fas fa-credit-card"></i> {% trans "Payment Info" %}</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        {% trans "All orders are processed securely. Pay on delivery is available." %}
+                    </p>
+                </section>
+            </div>
+
+            <aside class="checkout-summary">
+                <h2 class="summary-title">{% trans "Order Summary" %}</h2>
+
+                <div class="summary-list">
+                    {% for item in cart %}
+                    <div class="summary-item">
+                        <span>{{ item.product.name }} x{{ item.quantity }}</span>
+                        <span>${{ item.total_price }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="summary-item summary-item--total">
+                    <span>{% trans "Total Amount" %}</span>
+                    <span>${{ cart.get_total_price }}</span>
+                </div>
+
+                <button type="submit" class="pay-btn">{% trans "Place Order" %}</button>
+            </aside>
+        </form>
+    </div>
+</main>
+{% endblock %}

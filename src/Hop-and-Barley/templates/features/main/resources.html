@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Brewing Resources" %} | Hop & Barley{% endblock title %}
+
+{% block extra_css %}
+<style>
+    .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+
+    .resource-item {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+        text-align: left;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #f1f5f9;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .resource-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        border-color: #006B44;
+    }
+
+    .resource-icon {
+        font-size: 32px;
+        color: #006B44;
+        margin-bottom: 24px;
+        width: 64px;
+        height: 64px;
+        background: #f0fdf4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+    }
+
+    .resource-item h3 {
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .resource-item p {
+        color: #64748b;
+        line-height: 1.7;
+        margin-bottom: 30px;
+    }
+
+    .resource-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .resource-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #334155;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+    }
+
+    .resource-link:hover {
+        color: #006B44;
+    }
+
+    .resource-link i {
+        font-size: 16px;
+        color: #94a3b8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="static-page-wrapper">
+    <div class="container">
+        <div class="static-page-content" style="max-width: 1100px; margin: 0 auto; text-align: center;">
+            <h1 class="static-page-title">{% trans "Brewer's Toolbox" %}</h1>
+            <p class="static-page-subtitle">{% trans "Everything you need to perfect your craft, from calculators to technical guides." %}</p>
+
+            <div class="resources-grid">
+                <!-- Calculators -->
+                <div class="resource-item">
+                    <div>
+                        <div class="resource-icon"><i class="fa-solid fa-calculator"></i></div>
+                        <h3>{% trans "Brewing Calculators" %}</h3>
+                        <p>{% trans "Calculate ABV, IBU, Color (SRM), and Mash infusions with our simple interactive tools." %}</p>
+                    </div>
+                    <div class="resource-list">
+                        <a href="#" class="resource-link"><i class="fa-solid fa-chevron-right"></i> {% trans "ABV Calculator" %}</a>
+                        <a href="#" class="resource-link"><i class="fa-solid fa-chevron-right"></i> {% trans "IBU & Hop Utilization" %}</a>
+                        <a href="#" class="resource-link"><i class="fa-solid fa-chevron-right"></i> {% trans "Carbonation Tool" %}</a>
+                    </div>
+                </div>
+
+                <!-- Technical Library -->
+                <div class="resource-item">
+                    <div>
+                        <div class="resource-icon"><i class="fa-solid fa-book"></i></div>
+                        <h3>{% trans "Technical Library" %}</h3>
+                        <p>{% trans "Deep dives into grain chemistry, yeast management, and advanced water profiling." %}</p>
+                    </div>
+                    <div class="resource-list">
+                        <a href="#" class="resource-link"><i class="fa-solid fa-chevron-right"></i> {% trans "Yeast Health Guide" %}</a>
+                        <a href="#" class="resource-link"><i class="fa-solid fa-chevron-right"></i> {% trans "Water Profile Database" %}</a>
+                        <a href="#" class="resource-link"><i class="fa-solid fa-chevron-right"></i> {% trans "Hop Substitution Chart" %}</a>
+                    </div>
+                </div>
+
+                <!-- Downloads -->
+                <div class="resource-item">
+                    <div>
+                        <div class="resource-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                        <h3>{% trans "Downloads" %}</h3>
+                        <p>{% trans "Printable brew day logs, kit instructions, and maintenance checklists for your equipment." %}</p>
+                    </div>
+                    <div class="resource-list">
+                        <a href="#" class="resource-link"><i class="fa-solid fa-file-pdf"></i> {% trans "Brew Day Log (A4)" %}</a>
+                        <a href="#" class="resource-link"><i class="fa-solid fa-file-pdf"></i> {% trans "Cleaning Checklist" %}</a>
+                        <a href="#" class="resource-link"><i class="fa-solid fa-file-pdf"></i> {% trans "Ingredient Inventory" %}</a>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 80px; padding: 50px; background: #f8fafc; border-radius: 24px; border: 1px dashed #cbd5e1;">
+                <h3 style="margin-bottom: 12px;">{% trans "Missing something?" %}</h3>
+                <p style="color: #64748b; margin-bottom: 24px;">{% trans "If there is a resource or calculator you'd like to see here, let us know." %}</p>
+                <a href="{% url 'main:contacts' %}" class="button button--secondary">{% trans "Suggest a Resource" %}</a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}

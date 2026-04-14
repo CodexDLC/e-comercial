@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}Каталог товаров | Hop & Barley{% endblock title %}
+
+{% block content %}
+    <section class="hero-banner">
+        <img src="{% static 'img/background/hopfen-fields.jpg' %}" alt="Beautiful hops on a dark background" class="hero-banner__image">
+        <div class="hero-banner__overlay"></div>
+    </section>
+
+    <div class="container main-content-grid">
+        <aside class="sidebar">
+            <div class="sidebar__section">
+                <h4 class="section-title">Keywords</h4>
+                <div class="active-keywords">
+                    {% for category in categories %}
+                        {% if category.slug in selected_categories %}
+                            <a href="?{% for k,v in request.GET.lists %}{% if k == 'category' %}{% for val in v %}{% if val != category.slug %}{{ k }}={{ val }}&{% endif %}{% endfor %}{% elif k != 'page' %}{% for val in v %}{{ k }}={{ val }}&{% endfor %}{% endif %}{% endfor %}"
+                               class="keyword-tag">
+                                {{ category.name }}
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="sidebar__section">
+                <h4 class="section-title">Product Type</h4>
+                <form id="filter-form" method="get">
+                    {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                    {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
+                    <div class="filter-group">
+                        {% for category in categories %}
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="category" value="{{ category.slug }}"
+                                    {% if category.slug in selected_categories %}checked{% endif %}
+                                    onchange="this.form.submit()">
+                                <span>{{ category.name }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+        </aside>
+
+        <section class="products-area product-grid-section">
+            <div class="search-sort-bar">
+                <form class="search-input-wrapper" method="GET" action="">
+                    <input type="text" name="q" placeholder="Search" class="search-input" value="{{ request.GET.q }}">
+                    {% for cat in selected_categories %}
+                        <input type="hidden" name="category" value="{{ cat }}">
+                    {% endfor %}
+                    {% if request.GET.sort %}
+                        <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+                    {% endif %}
+                    <button type="submit" class="search-button" aria-label="Search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+                <div class="sort-options">
+                    <a href="?{% for k,v in request.GET.lists %}{% if k != 'sort' %}{% for val in v %}{{ k }}={{ val }}&{% endfor %}{% endif %}{% endfor %}sort=new"
+                       class="sort-button {% if not request.GET.sort or request.GET.sort == 'new' %}active-sort{% endif %}">
+                        <span>New</span>
+                    </a>
+                    <a href="?{% for k,v in request.GET.lists %}{% if k != 'sort' %}{% for val in v %}{{ k }}={{ val }}&{% endfor %}{% endif %}{% endfor %}sort=price_asc"
+                       class="sort-button {% if request.GET.sort == 'price_asc' %}active-sort{% endif %}">
+                        Price ascending
+                    </a>
+                    <a href="?{% for k,v in request.GET.lists %}{% if k != 'sort' %}{% for val in v %}{{ k }}={{ val }}&{% endfor %}{% endif %}{% endfor %}sort=price_desc"
+                       class="sort-button {% if request.GET.sort == 'price_desc' %}active-sort{% endif %}">
+                        Price descending
+                    </a>
+                    <a href="?{% for k,v in request.GET.lists %}{% if k != 'sort' %}{% for val in v %}{{ k }}={{ val }}&{% endfor %}{% endif %}{% endfor %}sort=rating"
+                       class="sort-button {% if request.GET.sort == 'rating' %}active-sort{% endif %}">
+                        Rating
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <a href="{% url 'products:detail' product.slug %}" class="product-card__link-wrapper">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-card__image">
+                        {% else %}
+                            <img src="{% static 'img/products/default.jpg' %}" alt="{{ product.name }}" class="product-card__image">
+                        {% endif %}
+                        <div class="product-card__info">
+                            <div class="product-card__meta">
+                                <h4 class="product-card__name">{{ product.name }}</h4>
+                                {% if product.avg_rating %}
+                                <div class="product-card__rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>{{ product.avg_rating|floatformat:1 }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <p class="product-card__price">${{ product.price }}</p>
+                            <p class="product-card__description">{{ product.description|truncatewords:8 }}</p>
+                        </div>
+                    </a>
+                    <div class="product-card__actions" style="padding: 0 1.5rem 1.5rem;">
+                        <form action="{% url 'orders:cart_add' product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="button button--secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.8rem;">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>{% trans "Add to Cart" %}</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="no-products-message">
+                    <p>No products found matching your criteria.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="pagination__link pagination__link--prev">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Previous</span>
+                </a>
+                {% endif %}
+
+                <div class="pagination-list">
+                    {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <a href="?page={{ i }}" class="pagination__link active">{{ i }}</a>
+                        {% else %}
+                            <a href="?page={{ i }}" class="pagination__link">{{ i }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="pagination__link pagination__link--next">
+                    <span>Next</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </section>
+    </div>
+{% endblock content %}

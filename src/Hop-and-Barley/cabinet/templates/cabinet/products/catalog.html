@@ -1,0 +1,35 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n %}
+
+{% block extra_css %}
+<style>
+[x-cloak] { display: none !important; }
+.appt-row { cursor: pointer; transition: background .12s; }
+.appt-row:hover { background: #f8fafc; }
+.category-btn { border-radius: 20px; font-size: .8rem; transition: all .15s; }
+.category-btn.active { background: #0f172a; color: #fff; border-color: #0f172a; }
+.hover-primary:hover { color: var(--cab-primary) !important; }
+</style>
+{% endblock %}
+
+{% block cabinet_content %}
+<div class="space-y-6">
+  {# Header #}
+  <div class="d-flex align-items-start justify-content-between mb-4">
+    <div>
+      <h5 class="fw-semibold mb-0" style="color:#0f172a;">{% trans "Product Management" %}</h5>
+      <span class="text-muted" style="font-size:.82rem;">{% trans "Manage your store inventory" %}</span>
+    </div>
+
+    <button class="btn btn-sm btn-primary d-flex align-items-center gap-1"
+            style="font-size:.82rem;"
+            data-modal-url="{% url 'cabinet:product_create' %}">
+      <span class="bi bi-plus-lg"></span>
+      {% trans "Add Product" %}
+    </button>
+  </div>
+
+  {# Table Container #}
+  {% include "cabinet/products/partials/_products_table.html" %}
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Каталог товаров | Hop & Barley{% endblock title %}
+
+{% block content %}
+    <div class="container bento-container">
+        <div class="bento-grid">
+            <!-- Hero Card -->
+            <a href="{% url 'products:list' %}" class="bento-card bento-card--hero">
+                <div class="hero-badge">Premium Brewing Supplies</div>
+                <h1>Elevate Your Brew with Finest Ingredients</h1>
+                <p>From aromatic hops to crisp malts, we provide everything you need to craft the perfect beer.</p>
+                <img src="{% static 'img/background/hopfen-fields.jpg' %}" alt="Hops" class="bento-bg-img">
+            </a>
+
+            <!-- Stats/History Card -->
+            <div class="bento-card bento-card--stats">
+                <div class="stat-item">
+                    <h4>15+</h4>
+                    <span>Hops Varieties</span>
+                </div>
+                <div class="stat-item">
+                    <h4>100%</h4>
+                    <span>Natural Malts</span>
+                </div>
+                <div class="stat-item">
+                    <h4>24h</h4>
+                    <span>Fast Shipping</span>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <a href="{% url 'products:list' %}?category=hops" class="bento-card bento-card--category">
+                <h3>Aromatic Hops</h3>
+                <img src="{% static 'img/products/citra_hops.jpg' %}" alt="Hops" class="bento-bg-img">
+            </a>
+
+            <a href="{% url 'products:list' %}?category=malts" class="bento-card bento-card--category">
+                <h3>Crisp Malts</h3>
+                <img src="{% static 'img/products/maris_otter_malt.jpg' %}" alt="Malts" class="bento-bg-img">
+            </a>
+
+            <!-- Info Card -->
+            <div class="bento-card bento-card--info">
+                <h3>Expert Selection</h3>
+                <p>Your trusted partner in quality brewing. We source the world's finest hops and malts from elite farmers, ensuring your every craft is a masterpiece.</p>
+            </div>
+
+            <a href="{% url 'products:list' %}" class="bento-card bento-card--cta">
+                <i class="fa-solid fa-store"></i>
+                <h3 style="color: white; margin: 0;">Explore Full Catalog</h3>
+            </a>
+
+            <a href="{% url 'products:list' %}?category=yeast" class="bento-card bento-card--category">
+                <h3>Pure Yeast</h3>
+                <img src="{% static 'img/products/safale_us05_yeast.jpg' %}" alt="Yeast" class="bento-bg-img">
+            </a>
+        </div>
+
+        {% if products %}
+        <section class="featured-products" style="margin-top: 4rem;">
+            <h2 style="margin-bottom: 2rem;">Featured Products</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
+                {% for product in products|slice:":4" %}
+                <div class="product-card" style="background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb;">
+                    <h3 style="margin-bottom: 0.5rem;">{{ product.name }}</h3>
+                    <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;">{{ product.description|truncatewords:15 }}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 700; color: #111827;">${{ product.price }}</span>
+                        <a href="{% url 'products:detail' product.pk %}" style="color: #3b82f6; text-decoration: none; font-weight: 500;">Details →</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+{% endblock content %}

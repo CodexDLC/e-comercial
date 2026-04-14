@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Sign In" %}{% endblock %}
+{% block body_class %}auth-layout{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+    <div class="auth-background">
+        <img src="{% static 'img/background/pattern.jpg' %}" alt="">
+    </div>
+
+    <a class="auth-brand" href="/">
+        <img src="{% static 'img/logo.svg' %}" alt="Hop &amp; Barley">
+        <span class="auth-brand-copy">
+            <span class="auth-brand-kicker">{% trans "Cabinet Access" %}</span>
+            <span class="auth-brand-title">Hop &amp; Barley</span>
+        </span>
+    </a>
+
+    <div class="auth-form-container">
+        <div class="auth-card auth-container--login">
+            <div class="Legend">
+                <span class="auth-eyebrow">{% trans "Welcome Back" %}</span>
+                <h1 class="auth-title">{% trans "Sign in to your account" %}</h1>
+                <p class="auth-subtitle">{% trans "Use your username and password to continue to your cabinet." %}</p>
+            </div>
+
+            {% if form.non_field_errors %}
+            <div class="cab-auth__alert">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <form class="auth-form" method="post" action="{% url 'cabinet:account_login' %}">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="InputField">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <input
+                        type="{{ field.field.widget.input_type }}"
+                        name="{{ field.html_name }}"
+                        id="{{ field.id_for_label }}"
+                        class="Input{% if field.errors %} Input--error{% endif %}"
+                        {% if field.value %}value="{{ field.value }}"{% endif %}
+                        placeholder="{{ field.label }}"
+                        required
+                    >
+                    {% if field.errors %}
+                    <span class="cab-auth__error">{{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
+
+                <div class="TextLink">
+                    <a href="{% url 'cabinet:account_reset_password' %}">{% trans "Forgot password?" %}</a>
+                </div>
+
+                <div class="ButtonGroup">
+                    <button type="submit" class="button button--primary">
+                        {% trans "Sign In" %}
+                    </button>
+                </div>
+            </form>
+
+            <div class="auth-switch">
+                {% trans "Don't have an account?" %}
+                <a class="auth-inline-link" href="{% url 'cabinet:account_login' %}?action=register">{% trans "Register" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

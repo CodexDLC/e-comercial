@@ -1,0 +1,50 @@
+{% load static %}
+{% load i18n %}
+
+<header class="header">
+    <div class="header-container">
+        <!-- Logo -->
+        <a href="{% url 'main:home' %}" class="header__logo">
+            <img src="{% static 'img/logo.svg' %}" alt="Hop & Barley Logo" class="logo-img">
+            <p class="logo-text">Hop & Barley</p>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="header__nav nav-desktop">
+            <ul>
+                <li><a href="{% url 'products:list' %}" class="{% if request.resolver_match.app_name == 'products' %}active{% endif %}">{% trans "Products" %}</a></li>
+                <li><a href="{% url 'main:guides-recipes' %}">{% trans "Guides & Recipes" %}</a></li>
+                <li><a href="{% url 'main:community' %}">{% trans "Community" %}</a></li>
+                <li><a href="{% url 'main:resources' %}">{% trans "Resources" %}</a></li>
+                <li><a href="{% url 'main:contacts' %}" class="{% if 'contacts' in request.path %}active{% endif %}">{% trans "Contact" %}</a></li>
+            </ul>
+        </nav>
+
+        <!-- Actions -->
+        <div class="header-actions" style="display: flex; align-items: center;">
+
+
+
+            <!-- Unified Cart Icon -->
+            <a href="{% url 'orders:cart' %}" class="cart-icon" aria-label="Shopping Cart" style="margin-right: 15px;">
+                <img src="{% static 'img/icons/Shopping_bag.svg' %}" alt="Shopping Cart">
+            </a>
+
+            {% if request.user.is_authenticated %}
+            <!-- Block for authorized user -->
+            <div class="header__user-actions" id="auth-user" style="display:flex;">
+                <a href="{% url 'cabinet:client_home' %}" class="user-icon" aria-label="My Account">
+                    <img src="{% static 'img/icons/User_alt.svg' %}" alt="User Account">
+                </a>
+            </div>
+            {% else %}
+            <!-- Block for unauthorized user -->
+            <div class="header__auth-buttons" id="auth-guest">
+                <a href="{% url 'cabinet:account_login' %}" class="button button--secondary">Sign in</a>
+                <a href="{% url 'cabinet:account_login' %}?action=register" class="button button--primary">Register</a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</header>

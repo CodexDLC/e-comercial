@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Community Hub" %} | Hop & Barley{% endblock title %}
+
+{% block extra_css %}
+<style>
+    .community-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 40px;
+    }
+
+    .community-card {
+        background: white;
+        padding: 32px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        text-align: center;
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .community-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .community-icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        border-radius: 50%;
+        font-size: 28px;
+        color: #006B44;
+    }
+
+    .community-card.discord .community-icon { color: #5865F2; }
+    .community-card.telegram .community-icon { color: #0088cc; }
+    .community-card.whatsapp .community-icon { color: #25D366; }
+    .community-card.instagram .community-icon { color: #E4405F; }
+    .community-card.forum .community-icon { color: #f59e0b; }
+
+    .community-card h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .community-card p {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 8px;
+    }
+
+    .badge-coming {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #fef3c7;
+        color: #92400e;
+        border-radius: 99px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="static-page-wrapper">
+    <div class="container">
+        <div class="static-page-content" style="max-width: 1000px; margin: 0 auto; text-align: center;">
+            <h1 class="static-page-title">{% trans "Join our Community" %}</h1>
+            <p class="static-page-subtitle">{% trans "Connect with brewers from all over the world." %}</p>
+
+            <div class="community-grid">
+                <!-- Discord -->
+                <div class="community-card discord">
+                    <div class="community-icon"><i class="fa-brands fa-discord"></i></div>
+                    <h3>Discord</h3>
+                    <p>{% trans "Join our real-time chat server for live brewing advice and social events." %}</p>
+                    <a href="#" class="button button--secondary">{% trans "Join Server" %}</a>
+                </div>
+
+                <!-- Telegram -->
+                <div class="community-card telegram">
+                    <div class="community-icon"><i class="fa-brands fa-telegram"></i></div>
+                    <h3>Telegram</h3>
+                    <p>{% trans "Get quick news, updates, and chat with local brewers in our group." %}</p>
+                    <a href="#" class="button button--secondary">{% trans "Join Channel" %}</a>
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="community-card whatsapp">
+                    <div class="community-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                    <h3>WhatsApp</h3>
+                    <p>{% trans "Join our WhatsApp community for instant notifications and group discussions." %}</p>
+                    <a href="#" class="button button--secondary">{% trans "Open Chat" %}</a>
+                </div>
+
+                <!-- Instagram -->
+                <div class="community-card instagram">
+                    <div class="community-icon"><i class="fa-brands fa-instagram"></i></div>
+                    <h3>Instagram</h3>
+                    <p>{% trans "Follow us for brewing tips, new product arrivals, and community highlights." %}</p>
+                    <a href="#" class="button button--secondary">{% trans "Follow Us" %}</a>
+                </div>
+
+                <!-- Forum -->
+                <div class="community-card forum">
+                    <div class="community-icon"><i class="fa-solid fa-comments"></i></div>
+                    <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
+                        <h3>{% trans "Brewers Forum" %}</h3>
+                        <span class="badge-coming">{% trans "Soon" %}</span>
+                    </div>
+                    <p>{% trans "Our own knowledge base and threaded discussions are currently in development." %}</p>
+                    <button class="button button--primary" disabled style="opacity: 0.6;">{% trans "Wait for launch" %}</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 60px; padding: 40px; background: #e7f5ee; border-radius: 20px;">
+                <h3>{% trans "Share your brew!" %}</h3>
+                <p>{% trans "Tag us on social media using #HopAndBarley for a chance to be featured on our main page." %}</p>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}

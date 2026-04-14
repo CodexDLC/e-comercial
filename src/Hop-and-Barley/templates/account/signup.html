@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Create Account" %}{% endblock %}
+{% block body_class %}auth-layout{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+    <div class="auth-background">
+        <img src="{% static 'img/background/pattern.jpg' %}" alt="">
+    </div>
+
+    <a class="auth-brand" href="/">
+        <img src="{% static 'img/logo.svg' %}" alt="Hop &amp; Barley">
+        <span class="auth-brand-copy">
+            <span class="auth-brand-kicker">{% trans "New Account" %}</span>
+            <span class="auth-brand-title">Hop &amp; Barley</span>
+        </span>
+    </a>
+
+    <div class="auth-form-container">
+        <div class="auth-card auth-container--register">
+            <div class="Legend">
+                <span class="auth-eyebrow">{% trans "Register" %}</span>
+                <h1 class="auth-title">{% trans "Create your cabinet profile" %}</h1>
+                <p class="auth-subtitle">{% trans "Set up your account to manage orders, appointments, and messages in one place." %}</p>
+            </div>
+
+            {% if form.errors %}
+            <div class="cab-auth__alert">
+                {% trans "Please correct the errors below." %}
+            </div>
+            {% endif %}
+
+            <form class="auth-form" method="post" action="{% url 'cabinet:account_login' %}?action=register">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="InputField">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <p class="auth-help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                    <span class="cab-auth__error">{{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
+
+                <div class="ButtonGroup">
+                    <button type="submit" class="button button--primary">
+                        {% trans "Register" %}
+                    </button>
+                </div>
+            </form>
+
+            <div class="auth-switch">
+                {% trans "Already have an account?" %}
+                <a class="auth-inline-link" href="{% url 'cabinet:account_login' %}">{% trans "Sign In" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

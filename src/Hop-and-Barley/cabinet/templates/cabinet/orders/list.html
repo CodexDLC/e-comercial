@@ -1,0 +1,116 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n %}
+
+{% block extra_css %}
+<style>
+.order-row { transition: background .12s; cursor: pointer; }
+.order-row:hover { background: #f8fafc; }
+.order-row.pending-row { border-left: 3px solid #f59e0b !important; }
+.status-select { font-size: 0.85rem; padding: 0.25rem 1.5rem 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #cbd5e1; }
+.status-badge-sm {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px; font-size: .75rem; font-weight: 600;
+}
+.badge-pending    { background: #fef3c7; color: #92400e; }
+.badge-processing { background: #dbeafe; color: #1e40af; }
+.badge-shipped    { background: #e0f2fe; color: #0369a1; }
+.badge-delivered  { background: #d1fae5; color: #065f46; }
+.badge-cancelled  { background: #fee2e2; color: #991b1b; }
+</style>
+{% endblock %}
+
+{% block cabinet_content %}
+<div class="space-y-6">
+  {# Header #}
+  <div class="d-flex align-items-start justify-content-between mb-4">
+    <div>
+      <h5 class="fw-semibold mb-0" style="color:#0f172a;">{{ header_title }}</h5>
+      <span class="text-muted" style="font-size:.82rem;">{{ header_subtitle }}</span>
+    </div>
+    
+    <div>
+      <form method="get" class="d-flex align-items-center gap-2">
+        <label for="status-filter" class="form-label mb-0 text-muted" style="font-size:.82rem;">{% trans "Filter by status:" %}</label>
+        <select name="status" id="status-filter" class="form-select status-select" onchange="this.form.submit()">
+          <option value="">{% trans "All" %}</option>
+          {% for st_val, st_lbl in status_choices %}
+            <option value="{{ st_val }}" {% if active_status == st_val %}selected{% endif %}>{{ st_lbl }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+  </div>
+
+  {# Table Container #}
+  <div hx-get="{{ request.get_full_path }}" hx-trigger="refreshTable from:body" hx-select="#orders-table-wrapper" hx-swap="outerHTML" id="orders-table-wrapper">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" style="font-size: .88rem;">
+          <thead style="background:#f8fafc;">
+            <tr>
+              <th class="border-0 text-muted fw-medium text-uppercase py-3 ps-4" style="font-size:.7rem; letter-spacing:.05em;"># {% trans "ID" %}</th>
+              <th class="border-0 text-muted fw-medium text-uppercase py-3" style="font-size:.7rem; letter-spacing:.05em;">{% trans "Date" %}</th>
+              <th class="border-0 text-muted fw-medium text-uppercase py-3" style="font-size:.7rem; letter-spacing:.05em;">{% trans "User" %}</th>
+              <th class="border-0 text-muted fw-medium text-uppercase py-3" style="font-size:.7rem; letter-spacing:.05em;">{% trans "Address" %}</th>
+              <th class="border-0 text-muted fw-medium text-uppercase py-3 text-center" style="font-size:.7rem; letter-spacing:.05em;">{% trans "Items" %}</th>
+              <th class="border-0 text-muted fw-medium text-uppercase py-3" style="font-size:.7rem; letter-spacing:.05em;">{% trans "Amount" %}</th>
+              <th class="border-0 text-muted fw-medium text-uppercase py-3 pe-4 text-end" style="font-size:.7rem; letter-spacing:.05em;">{% trans "Status" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr class="order-row border-bottom{% if order.status == 'pending' %} pending-row{% endif %}"
+                onclick="window.location='{% url 'cabinet:orders_detail' pk=order.pk %}'">
+              <td class="py-3 ps-4 text-nowrap" style="color:#0f172a;">
+                <span class="fw-medium" style="font-family:monospace; font-size:.82rem;">{{ order.id|stringformat:"s"|slice:":8"|upper }}</span>
+                {% if order.status == 'pending' %}
+                  <span class="ms-1" style="color:#f59e0b;" title="{% trans 'Awaiting processing' %}"><i class="bi bi-exclamation-circle-fill" style="font-size:.75rem;"></i></span>
+                {% endif %}
+              </td>
+              <td class="py-3 text-muted" style="font-size:.85rem;">{{ order.created_at|date:"d.m.Y H:i" }}</td>
+              <td class="py-3 text-dark" style="font-size:.85rem;">
+                {% if order.user %}
+                  {{ order.user.email }}
+                {% else %}
+                  <span class="text-muted fst-italic">{% trans "Guest" %}</span>
+                {% endif %}
+              </td>
+              <td class="py-3 text-muted text-truncate" style="max-width:180px; font-size:.85rem;">
+                {{ order.shipping_address }}
+              </td>
+              <td class="py-3 text-center text-muted fw-medium" style="font-size:.85rem;">
+                {{ order.items.count }}
+              </td>
+              <td class="py-3 fw-semibold" style="color:#0f172a;">
+                {{ order.total_price }} ₽
+              </td>
+              <td class="py-3 pe-4 text-end" onclick="event.stopPropagation()">
+                <form
+                  hx-post="{% url 'cabinet:orders_status_update' pk=order.pk %}"
+                  hx-swap="none"
+                  class="d-inline-flex m-0 p-0"
+                >
+                  {% csrf_token %}
+                  <select name="status" class="form-select status-select bg-light" onchange="this.form.dispatchEvent(new Event('submit', {cancelable: true}))">
+                    {% for st_val, st_lbl in status_choices %}
+                      <option value="{{ st_val }}" {% if order.status == st_val %}selected{% endif %}>{{ st_lbl }}</option>
+                    {% endfor %}
+                  </select>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <div class="mb-2"><span class="bi bi-inbox fs-2 text-secondary opacity-50"></span></div>
+                {% trans "No orders found." %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

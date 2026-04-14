@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Contact Us" %} | Hop & Barley{% endblock title %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --contact-primary: #044d34; /* Deep, noble green */
+        --contact-accent: #10b981;
+        --contact-bg: #f8fafc;
+        --contact-text: #1e293b;
+        --contact-muted: #64748b;
+    }
+
+    .static-page-wrapper {
+        background-color: var(--contact-bg);
+        min-height: 80vh;
+        padding: 60px 0;
+    }
+
+    .contact-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 400px 1fr;
+        background: white;
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (max-width: 992px) {
+        .contact-container {
+            grid-template-columns: 1fr;
+            margin: 0 20px;
+        }
+    }
+
+    /* Side Info Panel */
+    .sidebar-info {
+        background: linear-gradient(135deg, var(--contact-primary), #022c1e);
+        color: white;
+        padding: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .sidebar-info h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        line-height: 1.1;
+    }
+
+    .sidebar-info p {
+        font-size: 1.1rem;
+        opacity: 0.8;
+        line-height: 1.6;
+        margin-bottom: 40px;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .item-icon {
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .item-content h3 {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin: 0 0 4px 0;
+        opacity: 0.6;
+    }
+
+    .item-content p, .item-content a {
+        font-size: 1rem;
+        color: white;
+        text-decoration: none;
+        margin: 0;
+    }
+
+    /* Form Panel */
+    .form-panel {
+        padding: 50px 70px;
+    }
+
+    @media (max-width: 640px) {
+        .form-panel { padding: 40px 30px; }
+    }
+
+    .form-header {
+        margin-bottom: 40px;
+    }
+
+    .form-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--contact-text);
+        margin-bottom: 8px;
+    }
+
+    .form-header p {
+        color: var(--contact-muted);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    @media (max-width: 640px) {
+        .form-grid { grid-template-columns: 1fr; }
+    }
+
+    .form-field {
+        margin-bottom: 24px;
+    }
+
+    .form-field label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--contact-text);
+        margin-bottom: 8px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+        width: 100%;
+        padding: 14px 18px;
+        background: #f8fafc;
+        border: 2px solid #f1f5f9;
+        border-radius: 14px;
+        font-size: 0.95rem;
+        color: var(--contact-text);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: none;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+        background: white;
+        border-color: var(--contact-accent);
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .submit-btn {
+        background: var(--contact-primary);
+        color: white;
+        padding: 16px 32px;
+        border: none;
+        border-radius: 14px;
+        font-size: 1rem;
+        font-weight: 700;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+        background: #065f46;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .social-links {
+        display: flex;
+        gap: 12px;
+        margin-top: 50px;
+    }
+
+    .social-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .social-btn:hover {
+        background: white;
+        color: var(--contact-primary);
+        transform: scale(1.1);
+    }
+
+    /* Alerts */
+    .alert {
+        padding: 16px 20px;
+        border-radius: 14px;
+        margin-bottom: 30px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="static-page-wrapper">
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    <i class="fa-solid fa-circle-check"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="contact-container">
+            <!-- Info Sidebar -->
+            <div class="sidebar-info">
+                <div>
+                    <h1>{% trans "Contact" %}<br/>{% trans "Us" %}</h1>
+                    <p>{% trans "Have a question about a recipe or order? We're here to help you brew the perfect beer." %}</p>
+
+                    <div class="contact-item">
+                        <div class="item-icon"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="item-content">
+                            <h3>Email</h3>
+                            <a href="mailto:{{ site_settings.email|default:'hello@hopandbarley.com' }}">
+                                {{ site_settings.email|default:'hello@hopandbarley.com' }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="item-icon"><i class="fa-solid fa-phone"></i></div>
+                        <div class="item-content">
+                            <h3>{% trans "Phone" %}</h3>
+                            <p>{{ site_settings.phone|default:'+1 (555) 123-4567' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="item-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="item-content">
+                            <h3>{% trans "Office" %}</h3>
+                            <p>Malt District, 808 Tower<br/>Berlin, Germany</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#" class="social-btn"><i class="fa-brands fa-discord"></i></a>
+                </div>
+            </div>
+
+            <!-- Main Form -->
+            <div class="form-panel">
+                <div class="form-header">
+                    <h2>{% trans "Send a Message" %}</h2>
+                    <p>{% trans "Fill out the form below and we'll get back to you within 24 hours." %}</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="{{ form.sender_name.id_for_label }}">{% trans "Full Name" %}</label>
+                            {{ form.sender_name }}
+                        </div>
+                        <div class="form-field">
+                            <label for="{{ form.sender_email.id_for_label }}">{% trans "Email Address" %}</label>
+                            {{ form.sender_email }}
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="{{ form.sender_phone.id_for_label }}">{% trans "Phone (optional)" %}</label>
+                            {{ form.sender_phone }}
+                        </div>
+                        <div class="form-field">
+                            <label for="{{ form.topic.id_for_label }}">{% trans "Inquiry Type" %}</label>
+                            {{ form.topic }}
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="{{ form.subject.id_for_label }}">{% trans "Subject" %}</label>
+                        {{ form.subject }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="{{ form.body.id_for_label }}">{% trans "Message" %}</label>
+                        {{ form.body }}
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        {% trans "Send Message" %} <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}

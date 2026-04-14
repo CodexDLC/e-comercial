@@ -1,0 +1,62 @@
+[
+  {
+    "model": "products.category",
+    "pk": 1,
+    "fields": {
+      "name": "Hops",
+      "slug": "hops",
+      "is_active": true,
+      "is_featured": true,
+      "order": 1,
+      "description": "Essential for bitterness, flavor, and aroma in beer.",
+      "image": "products/citra_hops.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z"
+    }
+  },
+  {
+    "model": "products.category",
+    "pk": 2,
+    "fields": {
+      "name": "Malts",
+      "slug": "malts",
+      "is_active": true,
+      "is_featured": true,
+      "order": 2,
+      "description": "The soul of the beer, providing sugar for fermentation and color.",
+      "image": "products/maris_otter_malt.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z"
+    }
+  },
+  {
+    "model": "products.category",
+    "pk": 3,
+    "fields": {
+      "name": "Yeast",
+      "slug": "yeast",
+      "is_active": true,
+      "is_featured": true,
+      "order": 3,
+      "description": "Microscopic fungi responsible for turning wort into beer.",
+      "image": "products/safale_us05_yeast.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z"
+    }
+  },
+  {
+    "model": "products.category",
+    "pk": 4,
+    "fields": {
+      "name": "Brewing Kits",
+      "slug": "kits",
+      "is_active": true,
+      "is_featured": true,
+      "order": 4,
+      "description": "All-in-one batches for your convenience.",
+      "image": "products/ipa_kit.jpg",
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z"
+    }
+  }
+]

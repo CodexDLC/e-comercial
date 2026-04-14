@@ -1,0 +1,78 @@
+{% load i18n %}
+<div id="products-container"
+     class="card border-0 shadow-sm overflow-hidden"
+     style="border-radius: 12px;"
+     hx-trigger="products-updated from:body"
+     hx-get="{{ request.path }}?category={{ active_category|default:'' }}"
+     hx-target="this"
+     hx-swap="outerHTML">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="bg-light">
+        <tr style="font-size: .75rem; text-transform: uppercase; letter-spacing: 0.025em; color: #64748b;">
+          <th class="ps-4 border-0 fw-bold">{% trans "Product" %}</th>
+          <th class="border-0 fw-bold">{% trans "Category" %}</th>
+          <th class="border-0 fw-bold">{% trans "Price" %}</th>
+          <th class="border-0 fw-bold">{% trans "Stock" %}</th>
+          <th class="border-0 fw-bold text-end pe-4">{% trans "Actions" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr class="appt-row align-middle"
+            data-modal-url="{% url 'cabinet:product_update' product.id %}"
+            style="font-size: .88rem; border-bottom: 1px solid #f1f5f9; cursor: pointer;">
+          <td class="ps-4 py-3">
+            <div class="d-flex align-items-center gap-3">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" class="rounded shadow-sm" style="width: 40px; height: 40px; object-fit: cover;">
+              {% else %}
+                <div class="rounded bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                   <i class="bi bi-box text-muted"></i>
+                </div>
+              {% endif %}
+              <div class="d-flex flex-column">
+                <span class="fw-medium text-dark">{{ product.name }}</span>
+                {% if not product.is_active %}
+                  <span class="text-muted" style="font-size: .75rem;">{% trans "Draft" %}</span>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+          <td><span class="badge bg-light text-dark fw-normal border" style="border-radius: 6px;">{{ product.category.name }}</span></td>
+          <td class="fw-semibold text-dark">{{ product.price }}</td>
+          <td>
+            <span class="{% if product.stock <= 5 %}text-danger font-bold{% else %}text-muted{% endif %}">
+              {{ product.stock }}
+            </span>
+          </td>
+          <td class="text-end pe-4">
+             <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-link p-0 text-muted hover-primary"
+                        title="{% trans 'Quick Edit' %}"
+                        data-modal-url="{% url 'cabinet:product_update' product.id %}">
+                    <i class="bi bi-pencil-square" style="font-size: 1.1rem;"></i>
+                </button>
+                <a href="/admin/products/product/{{ product.id }}/change/"
+                   class="btn btn-link p-0 text-muted"
+                   target="_blank"
+                   onclick="event.stopPropagation();">
+                   <i class="bi bi-gear" style="font-size: 1.1rem;"></i>
+                </a>
+             </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center py-5 text-muted">
+            <div class="py-4">
+                <i class="bi bi-inbox d-block mb-2 opacity-50" style="font-size: 2.5rem;"></i>
+                <p class="mb-0">{% trans "No products found in this category." %}</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

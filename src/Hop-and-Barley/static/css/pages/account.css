@@ -1,0 +1,150 @@
+
+/* Extracted from main.css */
+========================================
+    Account Page Styles
+========================================
+*/
+.account-page-wrapper {
+    background-color: var(--background-grey);
+    padding: 64px 0;
+}
+
+.account-container {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Tabs Navigation */
+.account-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-default);
+}
+
+.account-tab {
+    padding: 4px 12px;
+    font-size: 16px;
+    line-height: 1.4;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--grey-text);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.account-tab:hover {
+    color: var(--black-main);
+}
+
+.account-tab.active {
+    color: var(--black-main);
+    font-weight: 600;
+    border-bottom-color: var(--black-main);
+}
+
+/* Tabs Content */
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Order History Table */
+.order-history-table {
+    width: 100%;
+    background-color: var(--background-default);
+    border-radius: 16px;
+    border: 1px solid var(--border-default);
+    overflow: hidden; /* To clip corners of header */
+}
+
+.order-table-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr; /* 3-column layout */
+    background-color: var(--background-green);
+    font-weight: 700;
+}
+
+.order-table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    border-top: 1px solid var(--border-default);
+}
+
+.order-table-cell {
+    padding: 20px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.order-date {
+    color: var(--grey-text);
+}
+
+/* Pagination for Account Page */
+.account-pagination {
+    margin-top: 24px;
+    padding: 24px;
+    background-color: var(--background-default);
+    border: 1px solid var(--border-default);
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pagination-link-account {
+    font-size: 16px;
+    color: var(--black-main);
+    font-weight: 500;
+}
+
+.pagination-link-account.disabled {
+    color: var(--grey-text);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+
+/*
+========================================
+    Account Information Form Styles
+========================================
+*/
+.account-form-container {
+    padding: 24px;
+    background-color: var(--background-default);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.account-form-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--black-main);
+}
+
+#account-info-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* button "Save"*/
+.button--full-width {
+    width: 100%;
+    height: 40px;
+    padding: 12px;
+}

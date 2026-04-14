@@ -1,0 +1,205 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n %}
+
+{% block extra_css %}
+<style>
+.order-detail-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+}
+.info-label {
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+.info-value {
+  font-size: .92rem;
+  color: #0f172a;
+  font-weight: 500;
+}
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: .8rem;
+  font-weight: 600;
+}
+.status-pending    { background: #fef3c7; color: #92400e; }
+.status-processing { background: #dbeafe; color: #1e40af; }
+.status-shipped    { background: #e0f2fe; color: #0369a1; }
+.status-delivered  { background: #d1fae5; color: #065f46; }
+.status-cancelled  { background: #fee2e2; color: #991b1b; }
+.product-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #f1f5f9;
+}
+</style>
+{% endblock %}
+
+{% block cabinet_content %}
+<div class="space-y-6">
+
+  {# Header #}
+  <div class="d-flex align-items-center justify-content-between mb-4 gap-3 flex-wrap">
+    <div>
+      <a href="{% url 'cabinet:orders_list' %}" class="text-muted text-decoration-none d-inline-flex align-items-center gap-1 mb-1" style="font-size:.82rem;">
+        <i class="bi bi-arrow-left"></i> {% trans "All Orders" %}
+      </a>
+      <h5 class="fw-semibold mb-0" style="color:#0f172a;">{{ header_title }}</h5>
+      <span class="text-muted" style="font-size:.82rem;">{{ header_subtitle }}</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="status-badge status-{{ order.status }}">
+        <i class="bi
+          {% if order.status == 'pending' %}bi-clock
+          {% elif order.status == 'processing' %}bi-gear
+          {% elif order.status == 'shipped' %}bi-truck
+          {% elif order.status == 'delivered' %}bi-check2-circle
+          {% elif order.status == 'cancelled' %}bi-x-circle
+          {% endif %}"></i>
+        {{ order.get_status_display }}
+      </span>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    {# Left: Customer Info #}
+    <div class="col-lg-4">
+      <div class="order-detail-card h-100">
+        <h6 class="fw-semibold mb-4" style="color:#0f172a;">
+          <i class="bi bi-person-circle me-2 text-primary"></i>{% trans "Customer" %}
+        </h6>
+
+        <div class="mb-3">
+          <div class="info-label">{% trans "Name" %}</div>
+          <div class="info-value">
+            {% if order.user %}
+              {{ order.user.get_full_name|default:order.user.username }}
+            {% else %}
+              <span class="text-muted fst-italic">{% trans "Guest" %}</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if order.user %}
+        <div class="mb-3">
+          <div class="info-label">{% trans "Email" %}</div>
+          <div class="info-value">{{ order.user.email }}</div>
+        </div>
+        {% endif %}
+
+        <div class="mb-3">
+          <div class="info-label">{% trans "Phone" %}</div>
+          <div class="info-value">{{ order.contact_phone|default:"—" }}</div>
+        </div>
+
+        <div class="mb-3">
+          <div class="info-label">{% trans "Shipping Address" %}</div>
+          <div class="info-value">{{ order.shipping_address }}</div>
+        </div>
+
+        <div class="mb-3">
+          <div class="info-label">{% trans "Order Date" %}</div>
+          <div class="info-value">{{ order.created_at|date:"d.m.Y H:i" }}</div>
+        </div>
+
+        <div>
+          <div class="info-label">{% trans "Order ID" %}</div>
+          <div class="info-value" style="font-family:monospace; font-size:.82rem; color:#64748b;">{{ order.id }}</div>
+        </div>
+      </div>
+    </div>
+
+    {# Right: Status Actions + Items #}
+    <div class="col-lg-8 d-flex flex-column gap-4">
+
+      {# Workflow Actions #}
+      {% if transitions %}
+      <div class="order-detail-card">
+        <h6 class="fw-semibold mb-3" style="color:#0f172a;">
+          <i class="bi bi-arrow-right-circle me-2 text-primary"></i>{% trans "Actions" %}
+        </h6>
+        <div class="d-flex flex-wrap gap-2">
+          {% for t in transitions %}
+          <form hx-post="{% url 'cabinet:orders_status_update' pk=order.pk %}" hx-swap="none" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="{{ t.value }}">
+            <button type="submit" class="btn btn-sm {{ t.btn_class }} d-inline-flex align-items-center gap-2" style="border-radius:8px; padding:8px 18px;">
+              <i class="bi {{ t.icon }}"></i>
+              {{ t.label }}
+            </button>
+          </form>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {# Order Items Table #}
+      <div class="order-detail-card">
+        <h6 class="fw-semibold mb-4" style="color:#0f172a;">
+          <i class="bi bi-bag me-2 text-primary"></i>{% trans "Items" %}
+          <span class="text-muted fw-normal" style="font-size:.82rem;">({{ items|length }})</span>
+        </h6>
+
+        <div class="table-responsive">
+          <table class="table align-middle mb-0" style="font-size:.88rem;">
+            <thead style="background:#f8fafc;">
+              <tr>
+                <th class="border-0 text-muted fw-medium text-uppercase py-2" style="font-size:.7rem; letter-spacing:.04em;">{% trans "Product" %}</th>
+                <th class="border-0 text-muted fw-medium text-uppercase py-2 text-center" style="font-size:.7rem;">{% trans "Qty" %}</th>
+                <th class="border-0 text-muted fw-medium text-uppercase py-2 text-end" style="font-size:.7rem;">{% trans "Unit Price" %}</th>
+                <th class="border-0 text-muted fw-medium text-uppercase py-2 text-end" style="font-size:.7rem;">{% trans "Subtotal" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+              <tr class="border-bottom">
+                <td class="py-3">
+                  <div class="d-flex align-items-center gap-3">
+                    {% if item.product.image %}
+                      <img src="{{ item.product.image.url }}" alt="" class="product-thumb">
+                    {% else %}
+                      <div class="product-thumb d-flex align-items-center justify-content-center" style="background:#f1f5f9;">
+                        <i class="bi bi-box text-muted"></i>
+                      </div>
+                    {% endif %}
+                    <div>
+                      <div class="fw-medium" style="color:#0f172a;">{{ item.product.name }}</div>
+                      {% if item.product.slug %}
+                      <div class="text-muted" style="font-size:.75rem;">{{ item.product.slug }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 text-center fw-semibold">{{ item.quantity }}</td>
+                <td class="py-3 text-end text-muted">{{ item.price }} ₽</td>
+                <td class="py-3 text-end fw-semibold" style="color:#0f172a;">{{ item.quantity|floatformat:0 }} × {{ item.price }} ₽</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="text-end fw-semibold py-3" style="color:#0f172a;">{% trans "Total" %}</td>
+                <td class="text-end py-3" style="font-size:1.05rem; font-weight:700; color:#0f172a;">{{ order.total_price }} ₽</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+    </div>{# /col-lg-8 #}
+  </div>{# /row #}
+
+</div>
+{% endblock %}

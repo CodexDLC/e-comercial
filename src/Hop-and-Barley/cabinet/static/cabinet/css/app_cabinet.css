@@ -1,0 +1,133 @@
+/*
+ * Compiled CSS — DO NOT EDIT
+ * Source: base.css
+ * Minified: False
+ */
+
+
+
+
+
+
+
+:root {
+
+  --cab-primary:          #3b82f6;
+  --cab-primary-dark:     #2563eb;
+
+
+  --cab-sidebar-bg:       #1e293b;
+  --cab-sidebar-text:     #94a3b8;
+  --cab-sidebar-active:   #ffffff;
+  --cab-sidebar-hover-bg: #334155;
+  --cab-sidebar-width:    260px;
+  --cab-sidebar-width-sm: 60px;
+
+
+  --cab-topbar-height:    60px;
+  --cab-topbar-bg:        #ffffff;
+  --cab-topbar-border:    #e2e8f0;
+
+
+  --cab-content-bg:       #f8fafc;
+  --cab-border:           #e2e8f0;
+
+
+  --cab-text:             #1e293b;
+  --cab-text-muted:       #64748b;
+
+
+  --cab-radius:           8px;
+  --cab-font:             'Inter', system-ui, sans-serif;
+}
+
+
+
+
+
+.cab-wrapper--client {
+  --cab-primary: #02542d;
+  --cab-primary-dark: #31572c;
+  --cab-sidebar-bg: #111d13;
+  --cab-sidebar-text: rgba(245, 245, 245, 0.74);
+  --cab-sidebar-active: #f5f5f5;
+  --cab-sidebar-hover-bg: rgba(207, 247, 211, 0.12);
+  --cab-topbar-bg: rgba(255, 255, 255, 0.92);
+  --cab-topbar-border: #dfe8df;
+  --cab-content-bg: linear-gradient(180deg, #f5f5f5 0%, #f2f8f2 100%);
+  --cab-border: #d9e3d9;
+  --cab-text: #111d13;
+  --cab-text-muted: #667067;
+  --cab-radius: 16px;
+}
+
+.cab-wrapper--client .cab-sidebar {
+  border-right: 1px solid var(--cab-border);
+  box-shadow: none;
+}
+
+.cab-wrapper--client .cab-sidebar__logo-name {
+  color: #f5f5f5;
+}
+
+.cab-wrapper--client .cab-nav__label,
+.cab-wrapper--client .cab-nav__icon {
+  color: var(--cab-sidebar-text);
+}
+
+.cab-wrapper--client .cab-nav:hover {
+  background: var(--cab-sidebar-hover-bg);
+}
+
+.cab-wrapper--client .cab-nav.active {
+  background: rgba(207, 247, 211, 0.16);
+}
+
+.cab-wrapper--client .cab-nav.active .cab-nav__label,
+.cab-wrapper--client .cab-nav.active .cab-nav__icon {
+  color: var(--cab-sidebar-active);
+}
+
+.cab-wrapper--client .cab-topbar,
+.cab-wrapper--client .cab-content {
+  background: transparent;
+}
+
+.cab-wrapper--client .cab-topbar {
+  backdrop-filter: blur(18px);
+}
+
+.cab-wrapper--client .card {
+  border-radius: 20px;
+}
+
+.cab-wrapper--client .btn-primary {
+  background: var(--cab-primary);
+  border-color: var(--cab-primary);
+}
+
+.cab-wrapper--client .btn-primary:hover,
+.cab-wrapper--client .btn-primary:focus {
+  background: var(--cab-primary-dark);
+  border-color: var(--cab-primary-dark);
+}
+
+.cab-wrapper--client .btn-light {
+  background: #f7faf7;
+  border-color: #d9e3d9;
+  color: var(--cab-text);
+}
+
+.cab-wrapper--client .cab-review-card {
+  border: 1px solid var(--cab-border);
+  border-radius: 16px;
+  padding: 1rem 1.125rem;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);
+}
+
+.cab-wrapper--client .cab-review-stars {
+  display: inline-flex;
+  gap: 0.2rem;
+  color: #d4a017;
+  flex-shrink: 0;
+}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Sign Out" %}{% endblock %}
+{% block body_class %}auth-layout{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+    <div class="auth-background">
+        <img src="{% static 'img/background/pattern.jpg' %}" alt="">
+    </div>
+
+    <a class="auth-brand" href="/">
+        <img src="{% static 'img/logo.svg' %}" alt="Hop &amp; Barley">
+        <span class="auth-brand-copy">
+            <span class="auth-brand-kicker">{% trans "Session" %}</span>
+            <span class="auth-brand-title">Hop &amp; Barley</span>
+        </span>
+    </a>
+
+    <div class="auth-form-container">
+        <div class="auth-card auth-container--login auth-card--logout">
+            <div class="Legend">
+                <span class="auth-eyebrow">{% trans "Sign Out" %}</span>
+                <h1 class="auth-title">{% trans "Sign out?" %}</h1>
+                <p class="auth-subtitle">{% trans "You can always sign back in later from the same device or another one." %}</p>
+            </div>
+
+            <form class="auth-form" method="post" action="{% url 'cabinet:account_logout' %}">
+                {% csrf_token %}
+
+                <div class="auth-actions auth-actions--logout">
+                    <button type="submit" class="button button--primary">
+                        {% trans "Sign Out" %}
+                    </button>
+                    <a href="{% url 'cabinet:client_home' %}" class="button button--cancel">
+                        {% trans "Stay signed in" %}
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+[
+  {
+    "model": "reviews.review",
+    "pk": 1001,
+    "fields": {
+      "id": 1001,
+      "product": 1,
+      "user": 2,
+      "rating": 5,
+      "comment": "As Alex Brewer, I can say these Citra hops are top quality! My IPA smells amazing.",
+      "is_active": true,
+      "created_at": "2026-04-11T10:00:00Z",
+      "updated_at": "2026-04-11T10:00:00Z"
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 1002,
+    "fields": {
+      "id": 1002,
+      "product": 2,
+      "user": 3,
+      "rating": 4,
+      "comment": "Mary Craft here. The Maris Otter malt is very consistent. Perfect for my Bitter.",
+      "is_active": true,
+      "created_at": "2026-04-12T11:00:00Z",
+      "updated_at": "2026-04-12T11:00:00Z"
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 1003,
+    "fields": {
+      "id": 1003,
+      "product": 5,
+      "user": 4,
+      "rating": 5,
+      "comment": "John Doe. These Cascade hops are a classic. Never fails.",
+      "is_active": true,
+      "created_at": "2026-04-13T09:00:00Z",
+      "updated_at": "2026-04-13T09:00:00Z"
+    }
+  }
+]

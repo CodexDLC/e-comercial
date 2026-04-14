@@ -1,0 +1,380 @@
+[
+  {
+    "model": "reviews.review",
+    "pk": 1,
+    "fields": {
+      "product": 6,
+      "user": 2,
+      "rating": 5,
+      "comment": "60L is my favorite caramel malt. It's not too light and not too dark. It provides the perfect balance of sweetness and caramel flavor for my Amber Ales. The color comes out just gorgeous.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 1
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 2,
+    "fields": {
+      "product": 6,
+      "user": 3,
+      "rating": 5,
+      "comment": "I add a bit of C60 to almost every recipe. It improves head retention and gives the beer a finished quality that's hard to achieve otherwise. Works great in IPAs to balance the bitterness.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 2
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 3,
+    "fields": {
+      "product": 6,
+      "user": 4,
+      "rating": 5,
+      "comment": "The quality of this malt is always top-notch. Consistent color, wonderful aroma when crushed. If a recipe calls for Crystal 60, this is the one I always reach for. Recommended.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 3
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 4,
+    "fields": {
+      "product": 5,
+      "user": 5,
+      "rating": 5,
+      "comment": "If you're brewing an American Pale Ale, you simply have to use Cascade. It's a classic. Bright, citrusy, refreshing. Never fails. Opens up beautifully on the dry hop.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 4
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 5,
+    "fields": {
+      "product": 5,
+      "user": 2,
+      "rating": 5,
+      "comment": "I add Cascade to almost all of my light ales for aroma. It gives the beer that signature character everyone loves. The fresh harvest smells absolutely divine!",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 5
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 6,
+    "fields": {
+      "product": 5,
+      "user": 3,
+      "rating": 4,
+      "comment": "A good, reliable hop. Not as \"explosive\" as Citra or Mosaic, but for a balanced beer, it's just what you need. Sometimes the alpha acids are on the lower end, so check the batch specs. Otherwise, excellent.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 6
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 7,
+    "fields": {
+      "product": 7,
+      "user": 4,
+      "rating": 5,
+      "comment": "The name says it all. It's like Cascade, but better. More citrus, more bitterness, more everything. Perfect for a single-hop IPA. One of my all-time favorite hops.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 7
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 8,
+    "fields": {
+      "product": 7,
+      "user": 5,
+      "rating": 5,
+      "comment": "I use Centennial for the main bittering in my IPAs. It provides a very clean, smooth bitterness without the harshness that can sometimes come from other high-alpha varieties. And the whirlpool aroma is fantastic.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 8
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 9,
+    "fields": {
+      "product": 7,
+      "user": 2,
+      "rating": 5,
+      "comment": "You can't go wrong with Centennial. It's a time-tested, reliable hop. Perfect for a classic West Coast IPA. Always delivers predictable and excellent results.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 9
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 10,
+    "fields": {
+      "product": 1,
+      "user": 3,
+      "rating": 5,
+      "comment": "Used Citra for my latest NEIPA, and the aroma is absolutely incredible. Poured hazy, with intense notes of grapefruit and passion fruit. A must-have for any hop-forward beer!",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 10
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 11,
+    "fields": {
+      "product": 1,
+      "user": 4,
+      "rating": 5,
+      "comment": "When I was just starting to brew, this was the yeast recommended to me, and I have no regrets. It's very forgiving with temperature and handles many beginner mistakes.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 11
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 12,
+    "fields": {
+      "product": 1,
+      "user": 5,
+      "rating": 5,
+      "comment": "The beer always turns out great. A must-have for any hop-forward beer!",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 12
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 13,
+    "fields": {
+      "product": 8,
+      "user": 2,
+      "rating": 5,
+      "comment": "I've tried many yeasts, but I always come back to A07. This is my \"house\" strain for all American ales. It's reliable, clean, and predictable. And the fact that you don't need a starter saves a ton of time!",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 13
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 14,
+    "fields": {
+      "product": 8,
+      "user": 3,
+      "rating": 5,
+      "comment": "This yeast works great in NEIPAs. It leaves a bit of body and enhances the fruity notes of the hops, creating that \"juicy\" flavor. Highly recommend.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 14
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 15,
+    "fields": {
+      "product": 8,
+      "user": 4,
+      "rating": 4,
+      "comment": "An excellent strain, it fermented my APA to perfection. The only thing is, try to keep the temperature at the lower end of the range. If it gets too warm, it can produce too many esters. But with proper control, the result is superb.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 15
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 16,
+    "fields": {
+      "product": 9,
+      "user": 5,
+      "rating": 5,
+      "comment": "If you want to brew a Hazy IPA that smells like a tropical fruit basket, Mosaic is your choice. Added it on the dry hop, and the result exceeded all expectations. Incredible!",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 16
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 17,
+    "fields": {
+      "product": 9,
+      "user": 2,
+      "rating": 5,
+      "comment": "This hop has it all! Every time I use it, I find new nuances—sometimes mango, sometimes blueberry, sometimes pine. It never gets old. Worth every penny.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 17
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 18,
+    "fields": {
+      "product": 9,
+      "user": 3,
+      "rating": 5,
+      "comment": "I love mixing Mosaic with Citra 1:1 for my DIPAs. They create the perfect tandem. Mosaic adds that \"berry\" complexity that Citra lacks. A true secret weapon.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 18
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 19,
+    "fields": {
+      "product": 10,
+      "user": 4,
+      "rating": 5,
+      "comment": "If you want to brew a true, crisp pilsner, you can't do without this malt. It provides that clean, light base on which everything else is built. Works perfectly.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 19
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 20,
+    "fields": {
+      "product": 10,
+      "user": 5,
+      "rating": 5,
+      "comment": "I use this malt as a \"clean canvas\" for many of my varieties. It doesn't interfere, but only enhances the other ingredients. Ideal for experimenting with hops or yeast. The quality is always top-notch.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 20
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 21,
+    "fields": {
+      "product": 10,
+      "user": 2,
+      "rating": 4,
+      "comment": "Excellent malt, but it's really very light. If you want any color at all, be sure to add specialty malts. For pilsners - it's super, but for pale ales I'd prefer something darker. Otherwise, no complaints.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 21
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 22,
+    "fields": {
+      "product": 11,
+      "user": 3,
+      "rating": 5,
+      "comment": "Don't even think about brewing a Czech pilsner without Saaz. This hop *is* that flavor. Gentle, spicy, perfect. I always buy the fresh harvest; the aroma is just amazing.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 22
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 23,
+    "fields": {
+      "product": 11,
+      "user": 4,
+      "rating": 5,
+      "comment": "I used it in a Belgian Saison, and it added a wonderful, subtle complexity. It doesn't overpower the yeast character but complements it. Very pleased with the result.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 23
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 24,
+    "fields": {
+      "product": 11,
+      "user": 5,
+      "rating": 4,
+      "comment": "You need to know what you're buying this hop for. It provides almost no bitterness, so it's not suitable for that. But for late-boil aroma, it's unparalleled. Docking one star only because you need to use quite a bit for a noticeable effect.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 24
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 25,
+    "fields": {
+      "product": 12,
+      "user": 2,
+      "rating": 5,
+      "comment": "I tried brewing witbiers with malted wheat, and they were okay. But as soon as I added unmalted wheat, everything fell into place! That signature light haze, that smoothness. This is it!",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 25
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 26,
+    "fields": {
+      "product": 12,
+      "user": 3,
+      "rating": 5,
+      "comment": "Great product, gives the beer a perfect body. A little tip: don't forget to add rice hulls to the mash! This wheat is very sticky and can completely clog your filter bed. With hulls, no problem at all.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 26
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 27,
+    "fields": {
+      "product": 12,
+      "user": 4,
+      "rating": 4,
+      "comment": "The result exceeded expectations, the witbier turned out silky and delicious. But it's definitely trickier to work with than malt. You need a good mill and patience during sparging. But for an authentic taste, it's worth it.",
+      "is_active": true,
+      "created_at": "2026-04-06T20:00:00Z",
+      "updated_at": "2026-04-06T20:00:00Z",
+      "id": 27
+    }
+  }
+]
