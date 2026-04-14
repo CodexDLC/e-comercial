@@ -1,0 +1,87 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: Hop-and-Barley-redis
+    env_file: .env
+    command: >
+      sh -c "redis-server --requirepass $${REDIS_PASSWORD} --appendonly yes"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "sh", "-c", "REDISCLI_AUTH=${REDIS_PASSWORD} redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - Hop-and-Barley-network
+
+  backend:
+    image: ${DOCKER_IMAGE_BACKEND}
+    container_name: Hop-and-Barley-backend
+    env_file: .env
+    volumes:
+      - media_volume:/app/media
+      - static_volume:/app/staticfiles
+      - logs_volume:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: always
+    networks:
+      - Hop-and-Barley-network
+
+
+
+  nginx:
+    image: ${DOCKER_IMAGE_NGINX}
+    container_name: Hop-and-Barley-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    volumes:
+      - ./nginx/nginx-main.conf:/etc/nginx/nginx.conf:ro
+      - media_volume:/app/media:ro
+      - static_volume:/app/staticfiles:ro
+      - certs_volume:/etc/letsencrypt:ro
+      - certbot_challenge_volume:/var/www/certbot:ro
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - Hop-and-Barley-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: Hop-and-Barley-certbot
+    volumes:
+      - certs_volume:/etc/letsencrypt
+      - certbot_challenge_volume:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - Hop-and-Barley-network
+
+volumes:
+  redis-data:
+  media_volume:
+  static_volume:
+  logs_volume:
+  certs_volume:
+  certbot_challenge_volume:
+
+networks:
+  Hop-and-Barley-network:
+    driver: bridge

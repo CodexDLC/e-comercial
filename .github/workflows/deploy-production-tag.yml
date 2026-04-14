@@ -1,0 +1,170 @@
+name: Deploy Production (Tag-based)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  db-backup:
+    name: Pre-deploy DB Backup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create DB Backup on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: ENV_FILE
+          script: |
+            set -e
+            mkdir -p /opt/Hop-and-Barley/backups
+            echo "$ENV_FILE" > /tmp/.env_tmp
+            DATABASE_URL=$(grep "^DATABASE_URL=" /tmp/.env_tmp | cut -d'=' -f2-)
+            rm /tmp/.env_tmp
+
+            if [ -z "$DATABASE_URL" ]; then
+              echo "❌ DATABASE_URL not found in secrets!"
+              exit 1
+            fi
+
+            BACKUP_FILE="/opt/Hop-and-Barley/backups/pre-deploy-$(date +%F_%H-%M).sql.gz"
+            echo "🗄 Starting backup to $BACKUP_FILE..."
+
+            if docker run --rm \
+                -v /opt/Hop-and-Barley/backups:/backups \
+                postgres:16-alpine \
+                sh -c "pg_dump '$DATABASE_URL' | gzip > /backups/tmp_backup.gz"; then
+                    mv /opt/Hop-and-Barley/backups/tmp_backup.gz "$BACKUP_FILE"
+                    echo "✅ Database backup saved successfully."
+            else
+                echo "❌ Database backup failed!"
+                exit 1
+            fi
+
+  build-and-push:
+    name: Build & Push Images
+    needs: db-backup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Lowercase repo name
+        run: echo "REPO_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deploy/backend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LOWER }}-backend:latest
+            ghcr.io/${{ env.REPO_LOWER }}-backend:${{ env.VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-backend:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-backend:buildcache,mode=max
+
+
+
+
+      - name: Build and Push Nginx
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deploy/nginx/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LOWER }}-nginx:latest
+            ghcr.io/${{ env.REPO_LOWER }}-nginx:${{ env.VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-nginx:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-nginx:buildcache,mode=max
+
+  deploy:
+    name: Apply Deployment on VPS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Lowercase repo name
+        run: echo "REPO_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Prepare configs
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        run: echo "$ENV_FILE" > deploy/.env
+
+      - name: Copy configs to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "deploy/"
+          target: "/opt/Hop-and-Barley/"
+          strip_components: 0
+          rm: false
+          overwrite: true
+
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DOCKER_IMAGE_BACKEND: ghcr.io/${{ env.REPO_LOWER }}-backend:${{ env.VERSION }}
+
+
+
+          DOCKER_IMAGE_NGINX: ghcr.io/${{ env.REPO_LOWER }}-nginx:${{ env.VERSION }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          VERSION: ${{ env.VERSION }}
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: DOCKER_IMAGE_BACKEND,DOCKER_IMAGE_NGINX,DOMAIN_NAME,REDIS_PASSWORD,GITHUB_TOKEN,GITHUB_ACTOR,VERSION
+          script: |
+            set -e
+            cd /opt/Hop-and-Barley/deploy
+
+            update_var() {
+              grep -q "^$1=" .env && sed -i "s|^$1=.*|$1=$2|g" .env || echo "$1=$2" >> .env
+            }
+            update_var "DOCKER_IMAGE_BACKEND" "$DOCKER_IMAGE_BACKEND"
+
+
+
+            update_var "DOCKER_IMAGE_NGINX" "$DOCKER_IMAGE_NGINX"
+
+            echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml run --rm -T backend python manage.py migrate --noinput
+            docker compose -f docker-compose.prod.yml run --rm -T backend python manage.py collectstatic --noinput
+            docker compose -f docker-compose.prod.yml up -d --no-deps --wait backend nginx
+
+            docker image prune -f
+            echo "✅ Deployment $VERSION completed!"

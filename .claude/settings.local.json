@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip show:*)",
+      "Bash(git -C \"C:/install/projects/codex_tools/codex-django\" log --oneline -10)",
+      "Bash(git -C \"C:/install/projects/codex_tools/codex-django\" checkout fe88fed)",
+      "Bash(pip install:*)",
+      "Bash(docker compose:*)",
+      "Bash(xargs grep:*)",
+      "Bash(mkdir -p C:/install/projects/lab/e-comercial/tests/unit C:/install/projects/lab/e-comercial/tests/integration C:/install/projects/lab/e-comercial/tests/e2e)",
+      "Bash(touch C:/install/projects/lab/e-comercial/tests/unit/__init__.py C:/install/projects/lab/e-comercial/tests/integration/__init__.py C:/install/projects/lab/e-comercial/tests/e2e/__init__.py)",
+      "Bash(python -m pytest tests/unit/ -m unit --no-header -q --override-ini=\"addopts=\")",
+      "Bash(python -m pytest tests/unit/ -m unit --no-header -q)",
+      "Bash(python -m pytest tests/unit/ -m unit -p no:warnings)",
+      "Bash(timeout 120 python -m pytest tests/unit/ -m unit -p no:warnings --tb=line)",
+      "Bash(timeout 120 python -m pytest tests/unit/test_auth.py::test_login_ok -p no:warnings --tb=short)",
+      "Bash(timeout 120 python -m pytest tests/unit/ -m unit -p no:warnings --tb=short)",
+      "Bash(timeout 120 python -m pytest tests/unit/ -m unit -p no:warnings --tb=no)",
+      "Bash(python -c \"import codex_core.dev.check_runner; import inspect; src = inspect.getsource\\(codex_core.dev.check_runner.BaseCheckRunner\\); print\\(src\\)\")",
+      "Bash(python -c \"from tools.dev.check import CheckRunner; import inspect; print\\(inspect.getsource\\(CheckRunner.run_all\\)\\)\")",
+      "Bash(timeout 120 python -m pytest tests/unit/ -m unit -p no:warnings --tb=no --co -q)",
+      "Bash(python -m pytest tests/unit/ -m unit -p no:warnings --tb=no)",
+      "Bash(sort -t% -k1 -n)",
+      "Bash(uv sync:*)",
+      "Bash(pytest)"
+    ]
+  }
+}

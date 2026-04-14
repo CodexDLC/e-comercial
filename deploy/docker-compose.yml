@@ -1,0 +1,116 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: ${CONTAINER_PREFIX:-Hop-and-Barley}-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-hop_and_barley_db}
+      - POSTGRES_USER=${POSTGRES_USER:-app_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-P@ssw0rd_for_DB_987}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - Hop-and-Barley-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ${CONTAINER_PREFIX:-Hop-and-Barley}-redis
+    env_file:
+      - ../.env
+    command: >
+      sh -c "redis-server --requirepass $${REDIS_PASSWORD} --appendonly yes"
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "sh", "-c", "REDISCLI_AUTH=${REDIS_PASSWORD} redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - Hop-and-Barley-network
+
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/backend/Dockerfile
+    container_name: ${CONTAINER_PREFIX:-Hop-and-Barley}-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../.env
+    environment:
+      - IS_DOCKER=True
+      - PYTHONPATH=/app
+    volumes:
+      - ../src/Hop-and-Barley:/app
+      - media_volume:/app/media
+      - static_volume:/app/staticfiles
+      - logs_volume:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - Hop-and-Barley-network
+
+
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: deploy/nginx/Dockerfile.local
+    container_name: ${CONTAINER_PREFIX:-Hop-and-Barley}-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - media_volume:/app/media:ro
+      - static_volume:/app/staticfiles:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - Hop-and-Barley-network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: ${CONTAINER_PREFIX:-Hop-and-Barley}-mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    environment:
+      - MP_MAX_MESSAGES=500
+      - MP_SMTP_AUTH_ACCEPT_ANY=1
+      - MP_SMTP_AUTH_ALLOW_INSECURE=1
+    restart: unless-stopped
+    networks:
+      - Hop-and-Barley-network
+
+volumes:
+  postgres_data:
+  redis-data:
+  media_volume:
+  static_volume:
+  logs_volume:
+
+networks:
+  Hop-and-Barley-network:
+    name: ${CONTAINER_PREFIX:-Hop-and-Barley}-network
+    driver: bridge
