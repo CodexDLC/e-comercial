@@ -1,0 +1,134 @@
+[project]
+name = "Hop-and-Barley"
+version = "0.1.0"
+description = "My new project scaffolded with codex-django"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=6.0.4",
+    "python-dotenv",
+    "dj-database-url",
+    "psycopg2-binary",
+    "loguru",
+    "redis>=5.0",
+    "codex-django>=0.4.2",
+    "codex-django-cli",
+    "codex-core",
+    "django-allauth[socialaccount]",
+    "gunicorn>=21.0",
+    "djangorestframework",
+    "djangorestframework-simplejwt",
+    "drf-spectacular",
+    "django-filter",
+    "cryptography>=46.0.7",
+    "requests>=2.33.0",
+    "pygments>=2.20.0",
+    "django-stubs-ext",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-django",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6.0",
+    "mypy",
+    "django-stubs",
+    "djangorestframework-stubs",
+    "ruff",
+    "bandit",
+    "pre-commit",
+    "pip-audit",
+    "detect-secrets",
+    "fakeredis[lua,asyncio]",
+]
+
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+src = ["src/Hop-and-Barley"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM", "RUF", "S"]
+ignore = ["B008", "S101", "E402", "E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src/Hop-and-Barley"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/**/migrations/*.py" = ["RUF012", "I001"]
+"tools/dev/check.py" = ["S603", "S605", "S607"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = "src/Hop-and-Barley"
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+ignore_missing_imports = true
+check_untyped_defs = true
+exclude = ["venv", ".venv", "migrations", "tests"]
+disable_error_code = ["attr-defined", "name-defined", "import-untyped", "arg-type", "call-arg", "union-attr"]
+
+[[tool.mypy.overrides]]
+module = [
+    "loguru.*",
+    "django.*",
+    "codex_platform.*",
+    "arq.*",
+    "unfold.*",
+    "django_lifecycle.*",
+]
+ignore_missing_imports = true
+ignore_errors = true
+
+[tool.django-stubs]
+django_settings_module = "core.settings.test"
+strict_settings = false
+
+[tool.pytest.ini_options]
+django_settings_module = "core.settings.test"
+pythonpath = ["src/Hop-and-Barley"]
+testpaths = ["tests/unit", "tests/integration", "src/Hop-and-Barley/features"]
+asyncio_mode = "auto"
+addopts = "-s -vv --ds=core.settings.test -p no:warnings --cov=src/Hop-and-Barley/features --cov=src/Hop-and-Barley/core --cov-report=term-missing"
+markers = [
+    "unit: fast isolated tests, no external services",
+    "integration: tests requiring DB or external services",
+    "e2e: HTTP smoke tests against running containers",
+]
+
+[tool.coverage.run]
+# Only measure code that unit tests are responsible for:
+# application features and the core logger module.
+# System/cabinet/management code is either integration-tested or excluded by design.
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/apps.py",
+    "*/urls.py",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
+[tool.bandit]
+exclude_dirs = ["tests", "venv", ".venv", "tools"]
+targets = ["src/Hop-and-Barley"]
+skips = ["B101", "B308", "B703"]
+
+[tool.codex-check]
+project-name = "Hop-and-Barley"
+audit-flags = "--skip-editable"
+run-lint = true
+run-types = true
+run-security = true
+run-extra-checks = true
+integration-requires = "PostgreSQL, Redis"
+test-stages = ["unit"]
+prompt-test-stages = ["integration"]
+live-output-test-stages = ["unit", "integration"]
+test-paths = ["tests/unit", "tests/integration", "src/Hop-and-Barley/features"]
+test-markers = { unit = "unit", integration = "integration" }
+types-paths = ["src/Hop-and-Barley"]

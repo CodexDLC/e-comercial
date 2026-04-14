@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg
+.env
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Editors
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Django stuff:
+*.log
+*.pot
+*.mo
+*.sqlite3
+media/
+static_root/
+
+# OS stuff
+.DS_Store
+.Trashes
+ehthumbs.db
+
+# Local data and logs
+data/
+logs/
