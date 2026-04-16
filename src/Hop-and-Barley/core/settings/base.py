@@ -52,10 +52,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Import Modules
 # ═══════════════════════════════════════════
 
-from .modules.security import *  # noqa
-from .modules.apps import *  # noqa
-from .modules.middleware import *  # noqa
-from .modules.database import *  # noqa
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
