@@ -44,7 +44,11 @@ jobs:
           python -m ruff format src/ --check
 
       - name: Run Mypy (Types)
-        run: python -m mypy src/
+        env:
+          PYTHONPATH: src/Hop-and-Barley
+          DJANGO_SETTINGS_MODULE: core.settings.test
+          SECRET_KEY: "ci_secret_key" # pragma: allowlist secret
+        run: python -m mypy src/Hop-and-Barley
 
       - name: Security Audit (pip-audit)
         run: python -m pip_audit --local

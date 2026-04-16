@@ -29,7 +29,11 @@ jobs:
         run: python -m ruff check src/
 
       - name: Run Mypy
-        run: python -m mypy src/
+        env:
+          PYTHONPATH: src/Hop-and-Barley
+          DJANGO_SETTINGS_MODULE: core.settings.test
+          SECRET_KEY: "ci_secret_key" # pragma: allowlist secret
+        run: python -m mypy src/Hop-and-Barley
 
       - name: Run Trivy (FS Scan)
         uses: aquasecurity/trivy-action@master
