@@ -20,7 +20,7 @@ from features.products.models import Product
 @dataclass
 class AnalyticsService:
     REPORT_TABS: tuple[dict[str, str], ...] = (
-        {"key": "revenue", "label": "Revenue", "icon": "bi-currency-ruble"},
+        {"key": "revenue", "label": "Revenue", "icon": "bi-currency-dollar"},
         {"key": "products", "label": "Products", "icon": "bi-box-seam"},
         {"key": "customers", "label": "Customers", "icon": "bi-people"},
     )
@@ -44,10 +44,10 @@ class AnalyticsService:
             "revenue": MetricWidgetData(
                 label=str(_("Total Sales")),
                 value=f"{kpi_sales:,.0f}".replace(",", " "),
-                unit="₽",
+                unit="$",
                 trend_value="",
                 trend_direction="",
-                icon="bi-currency-ruble",
+                icon="bi-currency-dollar",
             ),
             "users": MetricWidgetData(
                 label=str(_("Total Users")),
@@ -82,7 +82,7 @@ class AnalyticsService:
     @staticmethod
     def _format_currency(value: Decimal | float | int | None) -> str:
         amount = Decimal(value or 0)
-        return f"{amount:,.0f}".replace(",", " ") + " ₽"
+        return f"${amount:,.2f}"
 
     @staticmethod
     def _format_percent(value: Decimal | float | int | None) -> str:
@@ -95,6 +95,7 @@ class AnalyticsService:
         if normalized == "week":
             return today - timedelta(days=6), today
         if normalized == "quarter":
+            # Standard calendar quarters (Q1, Q2, Q3, Q4)
             quarter_start_month = ((today.month - 1) // 3) * 3 + 1
             return date(today.year, quarter_start_month, 1), today
         return today.replace(day=1), today
@@ -539,7 +540,7 @@ class AnalyticsService:
                 "subtitle": cur_month_label,
                 "icon": "bi-graph-up",
                 "type": "line",
-                "kpi_value": f"{total_cur:,.0f} ₽".replace(",", " "),
+                "kpi_value": f"${total_cur:,.2f}",
                 "kpi_trend": f"{trend_sign}{trend_pct:.1f}%",
                 "kpi_trend_label": f"vs {prev_month_label}",
                 "show_legend": True,
@@ -622,7 +623,7 @@ class AnalyticsService:
         recent_orders_items = [
             ListItem(
                 label=f"Order {order.id.hex[:8]}",
-                value=f"{order.total_price:,.0f} ₽",
+                value=f"${order.total_price:,.2f}",
                 sublabel=order.get_status_display(),
             )
             for order in latest_orders

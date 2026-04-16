@@ -1,6 +1,7 @@
 from typing import Any
 
 from codex_django.cabinet.views import dashboard_view
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 
@@ -13,7 +14,7 @@ def analytics_dashboard_view(request: Any) -> HttpResponse:
     return dashboard_view(request)
 
 
-class AnalyticsReportsView(TemplateView):
+class AnalyticsReportsView(LoginRequiredMixin, TemplateView):
     """Страница детальных отчетов."""
 
     template_name = "cabinet/analytics/reports.html"

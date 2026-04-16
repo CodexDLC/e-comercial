@@ -1,0 +1,468 @@
+/*
+ * Compiled JS — DO NOT EDIT
+ * Sources: core/dom_helpers.js, core/htmx_csrf.js, core/sidebar_sync.js, widgets/client_lookup.js, widgets/date_time_picker.js, widgets/tabbed_assignment.js, app/cabinet.entry.js
+ * Minified: False
+ */
+
+
+
+
+(function (window) {
+    window.CabinetCore = window.CabinetCore || {};
+
+    window.CabinetCore.ensureNamespace = function ensureNamespace(path) {
+        const parts = path.split('.');
+        let cursor = window;
+        parts.forEach((part) => {
+            cursor[part] = cursor[part] || {};
+            cursor = cursor[part];
+        });
+        return cursor;
+    };
+})(window);
+
+
+
+
+
+(function (window, document) {
+    document.addEventListener('htmx:configRequest', function (evt) {
+        const method = evt.detail.verb.toUpperCase();
+        if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+            const token = document.cookie.match(/csrftoken=([^;]+)/);
+            if (token) {
+                evt.detail.headers['X-CSRFToken'] = token[1];
+            }
+        }
+    });
+})(window, document);
+
+
+
+
+
+(function (window, document) {
+    function syncSidebarLinks() {
+        const currentPath = window.location.pathname;
+        const currentSearch = window.location.search;
+        const fullUrl = currentPath + currentSearch;
+
+        document.querySelectorAll('#cab-sidebar .cab-nav__item').forEach((link) => {
+            const href = link.getAttribute('href');
+            if (!href) {
+                return;
+            }
+
+            let isMatch = false;
+            if (href.includes('?')) {
+                isMatch = fullUrl.includes(href);
+            } else if (href !== '/') {
+                isMatch = currentPath === href || currentPath === href + '/';
+            }
+
+            link.classList.toggle('active', isMatch);
+        });
+    }
+
+    window.CabinetCore = window.CabinetCore || {};
+    window.CabinetCore.syncSidebarLinks = syncSidebarLinks;
+
+    document.body.addEventListener('htmx:afterSettle', syncSidebarLinks);
+    document.addEventListener('DOMContentLoaded', syncSidebarLinks);
+    window.addEventListener('popstate', syncSidebarLinks);
+})(window, document);
+
+
+
+
+
+(function (window) {
+    function normalizeClient(client) {
+        return {
+            id: client?.id || null,
+            name: client?.name || '',
+            phone: client?.phone || '',
+            email: client?.email || '',
+            fname: client?.fname || '',
+            lname: client?.lname || '',
+            visits: client?.visits || 0,
+        };
+    }
+
+    function splitName(fullName) {
+        const parts = (fullName || '').trim().split(/\s+/).filter(Boolean);
+        return {
+            fname: parts[0] || '',
+            lname: parts.slice(1).join(' ') || '',
+        };
+    }
+
+    window.CabinetWidgets = window.CabinetWidgets || {};
+    window.CabinetWidgets.createClientLookup = function createClientLookup(config) {
+        return {
+            search: '',
+            selectedId: null,
+            selectedName: '',
+            clientFName: '',
+            clientLName: '',
+            clientPhone: '',
+            clientEmail: '',
+            clients: config.clients || [],
+            minSearchLength: config.minSearchLength || 3,
+
+            get filteredClients() {
+                if (this.search.trim().length < this.minSearchLength) {
+                    return [];
+                }
+                const query = this.search.trim().toLowerCase();
+                return this.clients.filter((client) => {
+                    return client.name.toLowerCase().includes(query)
+                        || client.phone.includes(this.search.trim())
+                        || (client.email || '').toLowerCase().includes(query);
+                });
+            },
+
+            selectClient(client) {
+                const normalized = normalizeClient(client);
+                this.selectedId = normalized.id;
+                this.selectedName = normalized.name;
+                this.search = normalized.name;
+                if (!normalized.fname && normalized.name) {
+                    const split = splitName(normalized.name);
+                    normalized.fname = split.fname;
+                    normalized.lname = split.lname;
+                }
+                this.clientFName = normalized.fname;
+                this.clientLName = normalized.lname;
+                this.clientPhone = normalized.phone;
+                this.clientEmail = normalized.email;
+                this.$dispatch('client-selected', normalized.id ? normalized : null);
+                this.syncToParent();
+            },
+
+            confirmNewClient() {
+                if (!this.clientFName.trim()) {
+                    return;
+                }
+                const newClient = {
+                    id: 'new-' + Date.now(),
+                    name: (this.clientFName + ' ' + this.clientLName).trim(),
+                    phone: this.clientPhone,
+                    email: this.clientEmail,
+                    fname: this.clientFName,
+                    lname: this.clientLName,
+                    isNew: true,
+                };
+                this.selectClient(newClient);
+            },
+
+            quickAdd() {
+                if (!this.search.trim()) {
+                    return;
+                }
+                const split = splitName(this.search);
+                this.clientFName = split.fname;
+                this.clientLName = split.lname;
+                this.syncToParent();
+                this.confirmNewClient();
+            },
+
+            syncToParent() {
+                this.$dispatch('client-input', {
+                    fname: this.clientFName,
+                    lname: this.clientLName,
+                    phone: this.clientPhone,
+                    email: this.clientEmail,
+                });
+            },
+
+            clearSelection() {
+                this.selectedId = null;
+                this.selectedName = '';
+                this.search = '';
+                this.clientFName = '';
+                this.clientLName = '';
+                this.clientPhone = '';
+                this.clientEmail = '';
+                this.$dispatch('client-selected', null);
+                this.syncToParent();
+            },
+
+            hydrateFromExternal(client) {
+                if (!client) {
+                    this.selectedId = null;
+                    this.selectedName = '';
+                    this.search = '';
+                    this.clientFName = '';
+                    this.clientLName = '';
+                    this.clientPhone = '';
+                    this.clientEmail = '';
+                    return;
+                }
+                if (client.id === this.selectedId) {
+                    return;
+                }
+                this.selectedId = client.id || null;
+                this.selectedName = client.name || '';
+                this.search = client.name || '';
+                this.clientFName = client.fname || splitName(client.name).fname;
+                this.clientLName = client.lname || splitName(client.name).lname;
+                this.clientPhone = client.phone || '';
+                this.clientEmail = client.email || '';
+            },
+        };
+    };
+
+    window.cabinetClientLookup = function cabinetClientLookup(config) {
+        return window.CabinetWidgets.createClientLookup(config);
+    };
+})(window);
+
+
+
+
+
+(function (window) {
+    window.CabinetWidgets = window.CabinetWidgets || {};
+    window.CabinetWidgets.createDateTimePickerHelpers = function createDateTimePickerHelpers(config) {
+        const dayMonthKeys = config.dayMonthKeys || {};
+        const monthLabels = config.monthLabels || {};
+        const monthKeys = config.monthKeys || [];
+
+        return {
+            isDayInCurrentMonth(iso) {
+                return (dayMonthKeys[iso] || '') === this.currentMonthKey;
+            },
+            currentMonthLabel() {
+                return monthLabels[this.currentMonthKey] || config.fallbackMonthLabel || '';
+            },
+            goMonth(step) {
+                const index = monthKeys.indexOf(this.currentMonthKey);
+                if (index === -1) return;
+                const nextIndex = index + step;
+                if (nextIndex < 0 || nextIndex >= monthKeys.length) return;
+                this.currentMonthKey = monthKeys[nextIndex];
+                if (!this.isDayInCurrentMonth(this.selectedDate)) {
+                    const firstDay = Object.keys(dayMonthKeys).find((iso) => dayMonthKeys[iso] === this.currentMonthKey);
+                    if (firstDay && typeof this.selectDate === 'function') {
+                        this.selectDate(firstDay);
+                    }
+                }
+            },
+        };
+    };
+})(window);
+
+
+
+
+
+(function (window) {
+    window.CabinetWidgets = window.CabinetWidgets || {};
+    window.CabinetWidgets.createTabbedAssignment = function createTabbedAssignment(config) {
+        return {
+            activeKey: config.activeKey || '',
+            switchTab(nextKey) {
+                this.activeKey = nextKey;
+                if (typeof config.onSwitch === 'function') {
+                    config.onSwitch.call(this, nextKey);
+                }
+            },
+        };
+    };
+})(window);
+
+
+
+
+
+(function () {
+    const MODAL_ID = 'cabinet-modal';
+    const CONTENT_ID = 'cabinet-modal-content';
+
+    function ensureModalRoot() {
+        let modal = document.getElementById(MODAL_ID);
+        if (modal) {
+            return modal;
+        }
+
+        modal = document.createElement('div');
+        modal.id = MODAL_ID;
+        modal.className = 'modal fade';
+        modal.tabIndex = -1;
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML = [
+            '<div class="modal-dialog modal-lg modal-dialog-centered">',
+            `  <div class="modal-content" id="${CONTENT_ID}"></div>`,
+            '</div>',
+        ].join('');
+        document.body.appendChild(modal);
+        return modal;
+    }
+
+    function getModalContent() {
+        return ensureModalRoot().querySelector(`#${CONTENT_ID}`);
+    }
+
+    function getBootstrapModal(modalElement) {
+        if (!window.bootstrap || !window.bootstrap.Modal) {
+            return null;
+        }
+        return window.bootstrap.Modal.getOrCreateInstance(modalElement);
+    }
+
+    function openModalWithHtml(html) {
+        const modalElement = ensureModalRoot();
+        const content = getModalContent();
+        content.innerHTML = html;
+        const instance = getBootstrapModal(modalElement);
+        if (instance) {
+            instance.show();
+            return;
+        }
+        modalElement.classList.add('show');
+        modalElement.style.display = 'block';
+        document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+        const modalElement = document.getElementById(MODAL_ID);
+        if (!modalElement) {
+            return;
+        }
+        const instance = getBootstrapModal(modalElement);
+        if (instance) {
+            instance.hide();
+        } else {
+            modalElement.classList.remove('show');
+            modalElement.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+        const content = modalElement.querySelector(`#${CONTENT_ID}`);
+        if (content) {
+            content.innerHTML = '';
+        }
+    }
+
+    async function loadModal(url) {
+        const response = await window.fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            credentials: 'same-origin',
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to load modal: ${response.status}`);
+        }
+        openModalWithHtml(await response.text());
+    }
+
+    document.body.addEventListener('open-modal', function (event) {
+        const url = event.detail && event.detail.url;
+        if (!url) {
+            return;
+        }
+        event.preventDefault();
+        loadModal(url).catch(function (error) {
+            console.error(error);
+        });
+    });
+
+    document.body.addEventListener('htmx:afterRequest', function (event) {
+        const requestPath = event.detail && event.detail.pathInfo && event.detail.pathInfo.requestPath;
+        if (!requestPath || !requestPath.includes('/cabinet/products/')) {
+            return;
+        }
+        if (event.detail.successful && event.detail.xhr && event.detail.xhr.status === 204) {
+            closeModal();
+        }
+    });
+
+    document.body.addEventListener('hidden.bs.modal', function (event) {
+        if (event.target && event.target.id === MODAL_ID) {
+            const content = getModalContent();
+            if (content) {
+                content.innerHTML = '';
+            }
+        }
+    });
+
+    document.body.addEventListener('click', function (event) {
+        if (event.target.matches(`#${MODAL_ID}`)) {
+            closeModal();
+        }
+    });
+
+    
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('chartWidget', (config) => ({
+            config,
+            chart: null,
+            init() {
+                const ctx = this.$refs.canvas;
+                if (!ctx || typeof Chart === 'undefined') return;
+
+                const hasY1 = config.datasets && config.datasets.some(d => d.yAxisID === 'y1');
+
+                const scales = {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            font: { size: 10 },
+                            color: '#64748b',
+                            callback: (value) => {
+                                
+                                if (config.title && String(config.title).toLowerCase().includes('revenue')) {
+                                    return '$' + value.toLocaleString();
+                                }
+                                return value;
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 }, color: '#64748b' }
+                    }
+                };
+
+                if (hasY1) {
+                    scales.y1 = {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        beginAtZero: true,
+                        grid: { drawOnChartArea: false },
+                        ticks: { font: { size: 10 }, color: '#64748b' }
+                    };
+                }
+
+                this.chart = new Chart(ctx, {
+                    type: config.type || 'line',
+                    data: {
+                        labels: config.chart_labels || [],
+                        datasets: config.datasets || []
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        plugins: {
+                            legend: {
+                                display: config.show_legend ?? true,
+                                position: 'top',
+                                align: 'end',
+                                labels: { boxWidth: 10, font: { size: 10 } }
+                            }
+                        },
+                        scales: scales
+                    }
+                });
+            }
+        }));
+    });
+})();

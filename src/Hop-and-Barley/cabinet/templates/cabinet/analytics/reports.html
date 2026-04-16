@@ -5,299 +5,257 @@
 
 {% block extra_css %}
 <style>
-  .analytics-shell { display: grid; gap: 1.5rem; }
-  .analytics-header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: flex-start;
+  :root {
+    --brand-green: #10b981;
+    --brand-green-dark: #059669;
+    --brand-green-soft: #ecfdf5;
   }
-  .analytics-summary {
-    color: #475569;
-    font-size: .95rem;
-    max-width: 72ch;
+
+  .analytics-shell {
+    padding: 1rem 0 2rem;
   }
-  .analytics-tabs,
-  .analytics-periods,
-  .analytics-cards {
-    display: grid;
-    gap: .75rem;
-  }
-  .analytics-tabs { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-  .analytics-periods {
-    grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
-    justify-content: start;
-  }
-  .analytics-cards { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-  .analytics-pill,
-  .analytics-tab {
-    border: 1px solid #dbe3ef;
-    background: #fff;
-    border-radius: 16px;
-    color: inherit;
-    text-decoration: none;
-    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
-  }
-  .analytics-pill:hover,
-  .analytics-tab:hover {
-    transform: translateY(-1px);
-    border-color: #93c5fd;
-    box-shadow: 0 12px 24px rgba(15, 23, 42, .06);
-  }
-  .analytics-pill {
-    padding: .7rem 1rem;
+
+  /* Custom Pills */
+  .filter-pills .nav-link {
+    color: #64748b;
     font-weight: 600;
-    text-align: center;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
   }
-  .analytics-pill.active,
-  .analytics-tab.active {
-    border-color: #2563eb;
-    background: linear-gradient(135deg, rgba(37,99,235,.10), rgba(14,165,233,.08));
-    color: #0f172a;
+  .filter-pills .nav-link:hover {
+    background-color: rgba(255,255,255,0.6);
+    color: #334155;
   }
-  .analytics-tab {
-    padding: 1rem 1.1rem;
-    display: grid;
-    gap: .4rem;
+  .filter-pills .nav-link.active {
+    background-color: #fff !important;
+    color: var(--brand-green-dark) !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
-  .analytics-tab__label {
-    display: flex;
-    gap: .6rem;
-    align-items: center;
-    font-weight: 700;
-    color: #0f172a;
-  }
-  .analytics-card,
-  .analytics-panel {
-    background: #fff;
+
+  /* Metric Cards */
+  .metric-card {
     border: 1px solid #e2e8f0;
-    border-radius: 20px;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, .05);
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .analytics-card { padding: 1rem 1.1rem; }
-  .analytics-card__label {
-    color: #64748b;
-    font-size: .8rem;
+  .metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+    border-color: var(--brand-green);
+  }
+  .metric-label {
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: .08em;
-  }
-  .analytics-card__value {
-    font-size: 1.45rem;
+    letter-spacing: 0.05em;
     font-weight: 700;
-    color: #0f172a;
-    margin-top: .4rem;
+    color: #94a3b8;
   }
-  .analytics-card__hint {
+  .metric-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+  }
+
+  /* Excel-Premium Table */
+  .table-responsive-excel {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .table-excel {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+  }
+  .table-excel thead th {
+    background-color: #f8fafc;
     color: #64748b;
-    font-size: .86rem;
-    margin-top: .25rem;
-  }
-  .analytics-main {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
-    gap: 1rem;
-  }
-  .analytics-panel { padding: 1.1rem; }
-  .analytics-panel__eyebrow {
-    color: #64748b;
-    font-size: .8rem;
+    font-weight: 700;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: .08em;
-    margin-bottom: .45rem;
+    letter-spacing: 0.025em;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid #e2e8f0 !important;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 5;
   }
-  .analytics-panel__title {
-    color: #0f172a;
-    font-size: 1.1rem;
+  .table-excel tbody td {
+    padding: 0.875rem 1.25rem;
+    color: #475569;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .table-excel tbody tr:hover td {
+    background-color: var(--brand-green-soft);
+  }
+  .table-excel tfoot td {
+    background-color: #f8fafc;
     font-weight: 700;
-    margin-bottom: .35rem;
+    color: #1e293b;
+    border-top: 2px solid #e2e8f0;
   }
-  .analytics-panel__description {
-    color: #64748b;
-    font-size: .92rem;
-    margin-bottom: 1rem;
+  
+  .num-cell { font-variant-numeric: tabular-nums; text-align: right; }
+
+  .chart-card {
+    border-color: #f1f5f9;
+    background-color: #f8fafc;
   }
-  .analytics-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: .92rem;
-  }
-  .analytics-table th,
-  .analytics-table td {
-    padding: .85rem .75rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  .analytics-table th {
-    color: #64748b;
-    font-size: .78rem;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-  }
-  .analytics-table td.align-right,
-  .analytics-table th.align-right { text-align: right; }
-  .analytics-table tfoot td {
-    font-weight: 700;
-    color: #0f172a;
-    border-bottom: none;
-  }
-  .analytics-empty {
-    color: #64748b;
-    border: 1px dashed #cbd5e1;
-    border-radius: 16px;
-    padding: 2rem;
-    text-align: center;
-  }
-  @media (max-width: 992px) {
-    .analytics-main { grid-template-columns: 1fr; }
+  
+  .badge-period {
+    font-weight: 600;
+    background-color: var(--brand-green-soft);
+    color: var(--brand-green-dark);
+    border: 1px solid rgba(16, 185, 129, 0.2);
   }
 </style>
 {% endblock %}
 
 {% block cabinet_content %}
 <div class="analytics-shell">
-  <div class="analytics-header">
+  <!-- Header Section -->
+  <header class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 border-bottom pb-4 mb-4">
     <div>
-      <h1 class="h4 fw-bold mb-2">{{ report_title }}</h1>
-      <p class="analytics-summary mb-1">{{ report_summary }}</p>
-      <p class="text-muted mb-0">{{ period_label }}</p>
+      <h1 class="h3 fw-bold mb-1">{{ report_title }}</h1>
+      <p class="text-muted mb-0 small">{{ report_summary }}</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge badge-period rounded-pill px-3 py-2">
+        <i class="bi bi-calendar3 me-1"></i>
+        {{ period_label }}
+      </span>
+    </div>
+  </header>
+
+  <!-- Filter Toolbar -->
+  <div class="card border-0 shadow-sm rounded-4 mb-4 bg-light p-2">
+    <div class="row g-2 align-items-center">
+      <div class="col-auto">
+        <ul class="nav nav-pills filter-pills p-1">
+          {% for tab in report_tabs %}
+            <li class="nav-item">
+              <a class="nav-link {% if tab.key == active_tab %}active{% endif %}"
+                 href="?tab={{ tab.key }}&period={{ active_period }}">
+                <i class="bi {{ tab.icon }} me-1"></i>
+                {{ tab.label }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-auto ms-md-4">
+        <ul class="nav nav-pills filter-pills p-1">
+          {% for option in period_options %}
+            <li class="nav-item">
+              <a class="nav-link {% if option.key == active_period %}active{% endif %}"
+                 href="?tab={{ active_tab }}&period={{ option.key }}">
+                {{ option.label }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col text-end">
+        <button class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold" disabled>
+          <i class="bi bi-file-earmark-spreadsheet me-1"></i>
+          {% trans "Export" %}
+        </button>
+      </div>
     </div>
   </div>
 
-  <div class="analytics-tabs">
-    {% for tab in report_tabs %}
-      <a class="analytics-tab {% if tab.key == active_tab %}active{% endif %}"
-         href="?tab={{ tab.key }}&period={{ active_period }}">
-        <span class="analytics-tab__label">
-          <i class="bi {{ tab.icon }}"></i>
-          {{ tab.label }}
-        </span>
-      </a>
-    {% endfor %}
-  </div>
-
-  <div class="analytics-periods">
-    {% for option in period_options %}
-      <a class="analytics-pill {% if option.key == active_period %}active{% endif %}"
-         href="?tab={{ active_tab }}&period={{ option.key }}">
-        {{ option.label }}
-      </a>
-    {% endfor %}
-  </div>
-
-  <div class="analytics-cards">
-    {% for card in summary_cards %}
-      <article class="analytics-card">
-        <div class="analytics-card__label">{{ card.label }}</div>
-        <div class="analytics-card__value">{{ card.value }}</div>
-        <div class="analytics-card__hint">{{ card.hint }}</div>
-      </article>
-    {% endfor %}
-  </div>
-
-  <div class="analytics-main">
-    <section class="analytics-panel">
-      <div class="analytics-panel__eyebrow">{% trans "Chart" %}</div>
-      <div class="analytics-panel__title">{{ chart_title }}</div>
-      <div class="analytics-panel__description">{{ chart_description }}</div>
-      <div style="height: 320px;">
-        <canvas id="analytics-report-chart"></canvas>
-      </div>
-    </section>
-
-    <aside class="analytics-panel">
-      <div class="analytics-panel__eyebrow">{% trans "Summary" %}</div>
-      <div class="analytics-panel__title">{{ table_summary.primary }}</div>
-      <div class="analytics-panel__description">{{ table_summary.secondary }}</div>
-      <p class="mb-0 text-muted">
-        {% trans "This report uses live aggregates from orders, products, users, and messages in the selected period." %}
-      </p>
-    </aside>
-  </div>
-
-  <section class="analytics-panel">
-    <div class="analytics-panel__eyebrow">{% trans "Breakdown" %}</div>
-    <div class="analytics-panel__title">{% trans "Detailed Table" %}</div>
-    {% if rows %}
-      <div class="table-responsive">
-        <table class="analytics-table">
-          <thead>
-            <tr>
-              {% for column in columns %}
-                <th class="{% if column.align == 'right' %}align-right{% endif %}">{{ column.label }}</th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in rows %}
+  <!-- Main Report Area -->
+  <div class="row g-4">
+    <!-- Table: The Hero (Full width to emphasize Excel-style) -->
+    <div class="col-12">
+      <div class="table-responsive-excel">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-white">
+          <h5 class="mb-0 fw-bold">{% trans "Data Breakdown" %}</h5>
+          <span class="text-muted x-small">{% trans "Detailed period log" %}</span>
+        </div>
+        {% if rows %}
+          <table class="table table-excel align-middle">
+            <thead>
               <tr>
                 {% for column in columns %}
-                  <td class="{% if column.align == 'right' %}align-right{% endif %}">
-                    {% if column.bold %}<strong>{{ row|get_item:column.key }}</strong>{% else %}{{ row|get_item:column.key }}{% endif %}
+                  <th class="{% if column.align == 'right' %}num-cell{% endif %}">{{ column.label }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in rows %}
+                <tr>
+                  {% for column in columns %}
+                    <td class="{% if column.align == 'right' %}num-cell{% endif %}">
+                      {% if column.bold %}<strong>{{ row|get_item:column.key }}</strong>{% else %}{{ row|get_item:column.key }}{% endif %}
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                {% for column in columns %}
+                  <td class="{% if column.align == 'right' %}num-cell{% endif %}">
+                    {{ summary_row|get_item:column.key }}
                   </td>
                 {% endfor %}
               </tr>
-            {% endfor %}
-          </tbody>
-          <tfoot>
-            <tr>
-              {% for column in columns %}
-                <td class="{% if column.align == 'right' %}align-right{% endif %}">
-                  {{ summary_row|get_item:column.key }}
-                </td>
-              {% endfor %}
-            </tr>
-          </tfoot>
-        </table>
+            </tfoot>
+          </table>
+        {% else %}
+          <div class="p-5 text-center text-muted">
+            <i class="bi bi-clipboard-data display-4 mb-3"></i>
+            <p>{% trans "No data available for the selected period." %}</p>
+          </div>
+        {% endif %}
       </div>
-    {% else %}
-      <div class="analytics-empty">{% trans "No data available for the selected period." %}</div>
-    {% endif %}
-  </section>
+    </div>
+
+  </div>
+
+  <!-- Chart: Supporting (Moved below the table) -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card chart-card border-0 shadow-sm rounded-4"
+           x-data="chartWidget({
+               type: '{{ chart_type|escapejs }}',
+               title: '{{ chart_title|escapejs }}',
+               chart_labels: JSON.parse(document.getElementById('analytics-report-labels').textContent),
+               datasets: JSON.parse(document.getElementById('analytics-report-datasets').textContent)
+           })">
+           
+        {{ chart_labels|json_script:"analytics-report-labels" }}
+        {{ chart_datasets|json_script:"analytics-report-datasets" }}
+
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-2">
+              <div class="bg-white p-2 rounded-3 shadow-sm border">
+                  <i class="bi bi-graph-up-arrow text-success"></i>
+              </div>
+              <div>
+                  <h6 class="fw-bold mb-0">{% trans "Visual Trend" %}</h6>
+                  <p class="text-muted small mb-0">{{ chart_title }}</p>
+              </div>
+            </div>
+            <div class="p-3 bg-light rounded-3 d-flex align-items-center gap-3">
+                <span class="small text-muted">{{ table_summary.secondary }}</span>
+                <span class="fw-bold text-success">{{ table_summary.primary }}</span>
+            </div>
+          </div>
+          
+          <div style="height: 300px; position: relative;">
+            <canvas x-ref="canvas"
+                    data-chart-config='{"labels": "analytics-report-labels", "datasets": "analytics-report-datasets"}'></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-{{ chart_labels|json_script:"analytics-report-labels" }}
-{{ chart_datasets|json_script:"analytics-report-datasets" }}
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const canvas = document.getElementById('analytics-report-chart');
-  if (!canvas || typeof window.Chart === 'undefined') {
-    return;
-  }
-
-  const labels = JSON.parse(document.getElementById('analytics-report-labels').textContent);
-  const datasets = JSON.parse(document.getElementById('analytics-report-datasets').textContent);
-  const type = "{{ chart_type|escapejs }}";
-  const hasSecondaryAxis = datasets.some((dataset) => dataset.yAxisID === 'y1');
-
-  new Chart(canvas, {
-    type: type,
-    data: { labels: labels, datasets: datasets },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { position: 'bottom' }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: { color: 'rgba(148, 163, 184, 0.18)' }
-        },
-        y1: {
-          display: hasSecondaryAxis,
-          beginAtZero: true,
-          position: 'right',
-          grid: { drawOnChartArea: false }
-        },
-        x: {
-          grid: { display: false }
-        }
-      }
-    }
-  });
-});
-</script>
 {% endblock %}
