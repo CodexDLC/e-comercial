@@ -5,7 +5,6 @@ Ready for Docker Compose, Swarm, and Kubernetes.
 """
 
 import os
-import sys
 from pathlib import Path
 
 import django_stubs_ext
