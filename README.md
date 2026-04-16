@@ -13,7 +13,7 @@
 
 ## 🛠 Технологический стек
 
-- **Backend**: Django 6, REST Framework, [codex-django](https://github.com/codex-team/codex-django) (библиотека-скелет).
+- **Backend**: Django 6, REST Framework, [codex-django](https://github.com/codexdlc/codex-django) (библиотека-скелет).
 - **Frontend**: Vanilla CSS (CSS Variables), HTMX, Alpine.js (минималистичный JS).
 - **Инфраструктура**: PostgreSQL, Redis (кэш/сессии), Docker + Compose.
 - **Инструменты**: Ruff (линтинг), Mypy (типизация), Pytest (тестирование).
@@ -113,11 +113,21 @@ curl -X POST http://localhost:8080/api/v1/auth/token/ \
 
 ### 1. Единый "Quality Gate" (Checker)
 
-В проекте настроен скрипт, который прогоняет сразу все проверки (линтеры, типы, безопасность, тесты) согласно правилам из `pyproject.toml`:
+В проекте настроен автоматизированный скрипт контроля качества, который рекомендуется запускать перед каждым пушем. Он последовательно прогоняет:
+
+- **Linting & Formatting**: Проверка стиля кода через Ruff.
+- **Static Typing**: Проверка типов через Mypy.
+- **Security**: Аудит зависимостей (pip-audit) и поиск уязвимостей (Bandit).
+- **Testing**: Запуск Unit и Integration тестов (pytest).
+- **Docker Validation & E2E**: (Опционально) Сборка контейнеров и дымовые тесты.
+
+**Запуск всех проверок:**
 
 ```bash
 python tools/dev/check.py
 ```
+
+*Скрипт интерактивный и предложит запустить тяжелые интеграционные или Docker-тесты после успешного прохождения быстрых проверок.*
 
 ### 2. Pre-commit Hooks
 
