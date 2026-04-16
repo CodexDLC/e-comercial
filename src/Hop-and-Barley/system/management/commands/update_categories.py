@@ -1,6 +1,8 @@
 from pathlib import Path
-from django.conf import settings
+
 from codex_django.system.management.base_commands import JsonFixtureUpsertCommand
+from django.conf import settings
+
 
 class Command(JsonFixtureUpsertCommand):
     help = "Update categories from JSON fixture with hash protection"

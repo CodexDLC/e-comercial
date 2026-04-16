@@ -1,6 +1,8 @@
+# ruff: noqa: S311, B007
+# nosec B311
 import json
-import uuid
 import random
+import uuid
 from datetime import datetime, timedelta
 
 users = [2, 3, 4, 5]
@@ -37,47 +39,49 @@ base_date = datetime(2026, 4, 16)
 
 for i in range(25):
     # Random date in last 45 days
-    days_back = random.randint(0, 45)
-    order_date = (base_date - timedelta(days=days_back)).replace(hour=random.randint(9, 20), minute=random.randint(0, 59))
-    
+    days_back = random.randint(0, 45)  # nosec B311
+    order_date = (base_date - timedelta(days=days_back)).replace(
+        hour=random.randint(9, 20),  # nosec B311
+        minute=random.randint(0, 59),  # nosec B311
+    )
+
     order_id = str(uuid.uuid4())
-    user_id = random.choice(users)
-    status = random.choice(statuses) if days_back < 5 else "delivered"
-    
+    user_id = random.choice(users)  # nosec B311
+    status = random.choice(statuses) if days_back < 5 else "delivered"  # nosec B311
+
     # Random items (1-3 items)
-    current_order_items = random.sample(products, random.randint(1, 4)) # More items
-    total_price = 0
-    
+    current_order_items = random.sample(products, random.randint(1, 4))  # nosec B311
+    total_price = 0.0
+
     for item in current_order_items:
-        qty = random.randint(1, 3)
+        qty = random.randint(1, 3)  # nosec B311
         price = float(item["price"])
         line_total = price * qty
         total_price += line_total
-        
-        order_items.append({
-            "model": "orders.orderitem",
-            "fields": {
-                "order": order_id,
-                "product": item["id"],
-                "quantity": qty,
-                "price": f"{price:.2f}"
+
+        order_items.append(
+            {
+                "model": "orders.orderitem",
+                "fields": {"order": order_id, "product": item["id"], "quantity": qty, "price": f"{price:.2f}"},
             }
-        })
-        
-    orders.append({
-        "model": "orders.order",
-        "pk": order_id,
-        "fields": {
-            "id": order_id,
-            "user": user_id,
-            "status": status,
-            "total_price": f"{total_price:.2f}",
-            "shipping_address": random.choice(addresses),
-            "contact_phone": f"+44 7{random.randint(100, 999)} {random.randint(100, 999)} {random.randint(10, 99)}",
-            "created_at": order_date.isoformat() + "Z",
-            "updated_at": order_date.isoformat() + "Z"
+        )
+
+    orders.append(
+        {
+            "model": "orders.order",
+            "pk": order_id,
+            "fields": {
+                "id": order_id,
+                "user": user_id,
+                "status": status,
+                "total_price": f"{total_price:.2f}",
+                "shipping_address": random.choice(addresses),  # nosec B311
+                "contact_phone": f"+44 7{random.randint(100, 999)} {random.randint(100, 999)} {random.randint(10, 99)}",  # nosec B311
+                "created_at": order_date.isoformat() + "Z",
+                "updated_at": order_date.isoformat() + "Z",
+            },
         }
-    })
+    )
 
 with open("orders_gen.json", "w") as f:
     json.dump(orders, f, indent=2)
@@ -87,26 +91,30 @@ with open("order_items_gen.json", "w") as f:
 
 # Generate reviews
 reviews = []
-for i in range(20):
-    review_date = (base_date - timedelta(days=random.randint(0, 40)))
-    reviews.append({
-        "model": "reviews.review",
-        "fields": {
-            "user": random.choice(users),
-            "product": random.choice(products)["id"],
-            "rating": random.randint(3, 5),
-            "comment": random.choice([
-                "Excellent product, matches description perfectly.",
-                "Quality is good, but shipping took a bit longer than expected.",
-                "Best purchase this year! Highly recommend to everyone.",
-                "Okay product for the price.",
-                "Stellar quality, very impressed.",
-            ]),
-            "is_active": True,
-            "created_at": review_date.isoformat() + "Z",
-            "updated_at": review_date.isoformat() + "Z"
+for _ in range(20):
+    review_date = base_date - timedelta(days=random.randint(0, 40))  # nosec B311
+    reviews.append(
+        {
+            "model": "reviews.review",
+            "fields": {
+                "user": random.choice(users),  # nosec B311
+                "product": random.choice(products)["id"],  # nosec B311
+                "rating": random.randint(3, 5),  # nosec B311
+                "comment": random.choice(  # nosec B311
+                    [
+                        "Excellent product, matches description perfectly.",
+                        "Quality is good, but shipping took a bit longer than expected.",
+                        "Best purchase this year! Highly recommend to everyone.",
+                        "Okay product for the price.",
+                        "Stellar quality, very impressed.",
+                    ]
+                ),
+                "is_active": True,
+                "created_at": review_date.isoformat() + "Z",
+                "updated_at": review_date.isoformat() + "Z",
+            },
         }
-    })
+    )
 
 with open("reviews_gen.json", "w") as f:
     json.dump(reviews, f, indent=2)

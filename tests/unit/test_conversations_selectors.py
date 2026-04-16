@@ -1,4 +1,5 @@
 import pytest
+from django.http import Http404
 
 from features.conversations.models import Message, MessageReply
 from features.conversations.selector.messages import (
@@ -31,9 +32,9 @@ def message_factory(db):
 @pytest.mark.django_db
 class TestConversationSelectors:
     def test_get_messages_filtering(self, message_factory):
-        m1 = message_factory(status=Message.Status.OPEN, topic=Message.Topic.PRODUCT)
-        m2 = message_factory(status=Message.Status.PROCESSED, topic=Message.Topic.ORDER)
-        m3 = message_factory(is_archived=True)
+        _m1 = message_factory(status=Message.Status.OPEN, topic=Message.Topic.PRODUCT)
+        _m2 = message_factory(status=Message.Status.PROCESSED, topic=Message.Topic.ORDER)
+        _m3 = message_factory(is_archived=True)
 
         assert get_messages().count() == 2
         assert get_messages(status=Message.Status.OPEN).count() == 1
@@ -47,7 +48,7 @@ class TestConversationSelectors:
         assert get_message(m2.pk) is None
         assert get_message_or_404(m1.pk) == m1
 
-        with pytest.raises(Exception):  # Http404
+        with pytest.raises(Http404):
             get_message_or_404(m2.pk)
 
     def test_get_replies(self, message_factory):

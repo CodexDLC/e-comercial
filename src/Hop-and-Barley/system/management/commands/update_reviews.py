@@ -1,9 +1,8 @@
 from pathlib import Path
 from typing import Any
 
-from django.conf import settings
-
 from codex_django.system.management.base_commands import JsonFixtureUpsertCommand
+from django.conf import settings
 
 
 class Command(JsonFixtureUpsertCommand):

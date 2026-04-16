@@ -1,6 +1,8 @@
 """Auth view tests using Django TestCase (allauth-aware)."""
 
 import pytest
+
+# ruff: noqa: S105
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import TestCase, override_settings

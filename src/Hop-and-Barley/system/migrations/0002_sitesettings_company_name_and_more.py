@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('system', '0001_initial'),
+        ("system", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sitesettings',
-            name='company_name',
-            field=models.CharField(blank=True, default='Hop & Barley', max_length=100, verbose_name='Company Name'),
+            model_name="sitesettings",
+            name="company_name",
+            field=models.CharField(blank=True, default="Hop & Barley", max_length=100, verbose_name="Company Name"),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='site_description',
-            field=models.TextField(blank=True, verbose_name='Site Description'),
+            model_name="sitesettings",
+            name="site_description",
+            field=models.TextField(blank=True, verbose_name="Site Description"),
         ),
     ]

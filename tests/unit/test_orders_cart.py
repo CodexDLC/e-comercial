@@ -13,6 +13,7 @@ def request_with_session(rf):
     return request
 
 
+@pytest.mark.django_db
 class TestCartService:
     def test_get_cart_empty(self, request_with_session):
         cart = CartService.get_cart(request_with_session)

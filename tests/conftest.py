@@ -1,3 +1,4 @@
+# ruff: noqa: S106
 import pytest
 import redis
 import redis.asyncio

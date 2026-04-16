@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -30,7 +32,7 @@ class OrderItem(models.Model):
         verbose_name_plural = _("Позиции заказа")
 
     @property
-    def subtotal(self) -> float:
+    def subtotal(self) -> Decimal:
         """Calculate the subtotal for this item."""
         return self.quantity * self.price
 

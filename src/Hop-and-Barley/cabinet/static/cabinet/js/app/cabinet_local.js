@@ -391,7 +391,7 @@
         }
     });
 
-    
+
     document.addEventListener('alpine:init', () => {
         Alpine.data('chartWidget', (config) => ({
             config,
@@ -413,7 +413,7 @@
                             font: { size: 10 },
                             color: '#64748b',
                             callback: (value) => {
-                                
+
                                 if (config.title && String(config.title).toLowerCase().includes('revenue')) {
                                     return '$' + value.toLocaleString();
                                 }

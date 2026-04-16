@@ -27,10 +27,12 @@ class OrdersManagementView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         status_filter = self.request.GET.get("status")
         context.update(OrderCabinetService.get_list_data(status_filter=status_filter))
-        context.update({
-            "header_title": str(_("Orders")),
-            "header_subtitle": str(_("Order Management")),
-        })
+        context.update(
+            {
+                "header_title": str(_("Orders")),
+                "header_subtitle": str(_("Order Management")),
+            }
+        )
         # Status choices needed for the filter and the dropdown
         from features.orders.models.order import Order
 
@@ -53,11 +55,14 @@ class OrderDetailView(LoginRequiredMixin, TemplateView):
         order_id: UUID = self.kwargs["pk"]
         data = OrderCabinetService.get_detail_data(order_id)
         context.update(data)
-        context.update({
-            "header_title": f"Order #{str(data['order'].id)[:8].upper()}",
-            "header_subtitle": str(_("Order Details")),
-        })
+        context.update(
+            {
+                "header_title": f"Order #{str(data['order'].id)[:8].upper()}",
+                "header_subtitle": str(_("Order Details")),
+            }
+        )
         from features.orders.models.order import Order
+
         context["status_choices"] = Order.STATUS_CHOICES
         return context
 
@@ -77,10 +82,12 @@ class OrderStatusUpdateView(LoginRequiredMixin, View):
             referer = request.headers.get("HX-Current-URL", "")
             if "orders/" in referer and str(order_id) in referer:
                 from django.shortcuts import redirect
+
                 response = HttpResponse(status=204)
                 response["HX-Redirect"] = str(reverse_lazy("cabinet:orders_detail", kwargs={"pk": order_id}))
                 return response
             return HttpResponse(status=204, headers={"HX-Trigger": "refreshTable"})
 
         from django.shortcuts import redirect
+
         return redirect(reverse_lazy("cabinet:orders_list"))

@@ -57,7 +57,5 @@ class Command(BaseHashProtectedCommand):
                 f"Imported {self.fixture_key}: {total_created} created, {total_updated} updated, 0 skipped"
             )
         )
-        log.info(
-            f"Command: update_products | Action: Success | created={total_created} | updated={total_updated}"
-        )
+        log.info(f"Command: update_products | Action: Success | created={total_created} | updated={total_updated}")
         return True

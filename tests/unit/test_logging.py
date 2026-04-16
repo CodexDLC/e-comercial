@@ -11,7 +11,7 @@ from core.logger import DjangoLoggingSettingsAdapter
 pytestmark = pytest.mark.unit
 
 # Use a platform-appropriate absolute path so the test runs on both Linux and Windows.
-_ABS_LOG_DIR = "C:\\tmp\\hop-and-barley-logs" if sys.platform == "win32" else "/tmp/hop-and-barley-logs"
+_ABS_LOG_DIR = "C:\\tmp\\hop-and-barley-logs" if sys.platform == "win32" else "/tmp/hop-and-barley-logs"  # noqa: S108
 
 
 @override_settings(LOG_DIR="logs")

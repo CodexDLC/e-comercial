@@ -36,7 +36,7 @@ class TestClientProfileService:
             email="jane@example.com",
             birth_date="1995-05-05",
         )
-        success, message = ClientProfileService.save_profile(user, payload)
+        success, _message = ClientProfileService.save_profile(user, payload)
         assert success is True
 
         user.refresh_from_db()

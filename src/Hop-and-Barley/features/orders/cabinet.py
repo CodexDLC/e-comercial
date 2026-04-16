@@ -9,7 +9,6 @@ from features.orders.models.order import Order
 
 
 @notification_registry.register("orders")
-
 def _orders_bell(request: HttpRequest) -> object:
     from codex_django.conversations.cabinet import build_inbox_notification_item
 
@@ -22,7 +21,6 @@ def _orders_bell(request: HttpRequest) -> object:
 
 
 @DashboardSelector.extend(cache_key="orders_stats", cache_ttl=0)
-
 def provide_orders_stats(request: HttpRequest) -> dict[str, MetricWidgetData]:
     pending = Order.objects.filter(status="pending").count()
     total = Order.objects.count()

@@ -40,7 +40,18 @@ class ProductCatalogListView(LoginRequiredMixin, ListView[Product]):
 
 class ProductCreateView(LoginRequiredMixin, CreateView[Product, Any]):
     model = Product
-    fields = ("name", "slug", "category", "description", "price", "stock", "image", "specifications", "is_active", "order")
+    fields = (
+        "name",
+        "slug",
+        "category",
+        "description",
+        "price",
+        "stock",
+        "image",
+        "specifications",
+        "is_active",
+        "order",
+    )
     template_name = "cabinet/forms/modal_form.html"
     success_url = reverse_lazy("cabinet:product_catalog")
 
@@ -59,7 +70,18 @@ class ProductCreateView(LoginRequiredMixin, CreateView[Product, Any]):
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView[Product, Any]):
     model = Product
-    fields = ("name", "slug", "category", "description", "price", "stock", "image", "specifications", "is_active", "order")
+    fields = (
+        "name",
+        "slug",
+        "category",
+        "description",
+        "price",
+        "stock",
+        "image",
+        "specifications",
+        "is_active",
+        "order",
+    )
     template_name = "cabinet/forms/modal_form.html"
     success_url = reverse_lazy("cabinet:product_catalog")
 

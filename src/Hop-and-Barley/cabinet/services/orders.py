@@ -9,25 +9,25 @@ from features.orders.models.order import Order
 from features.orders.selectors.order import OrderSelector
 
 STATUS_TRANSITIONS: dict[str, list[str]] = {
-    "pending":    ["processing", "cancelled"],
-    "processing": ["shipped",    "cancelled"],
-    "shipped":    ["delivered"],
-    "delivered":  [],
-    "cancelled":  [],
+    "pending": ["processing", "cancelled"],
+    "processing": ["shipped", "cancelled"],
+    "shipped": ["delivered"],
+    "delivered": [],
+    "cancelled": [],
 }
 
 STATUS_ICONS: dict[str, str] = {
     "processing": "bi-gear",
-    "shipped":    "bi-truck",
-    "delivered":  "bi-check2-circle",
-    "cancelled":  "bi-x-circle",
+    "shipped": "bi-truck",
+    "delivered": "bi-check2-circle",
+    "cancelled": "bi-x-circle",
 }
 
 STATUS_STYLES: dict[str, str] = {
     "processing": "btn-primary",
-    "shipped":    "btn-info",
-    "delivered":  "btn-success",
-    "cancelled":  "btn-danger",
+    "shipped": "btn-info",
+    "delivered": "btn-success",
+    "cancelled": "btn-danger",
 }
 
 

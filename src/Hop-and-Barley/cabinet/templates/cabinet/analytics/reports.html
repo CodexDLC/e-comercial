@@ -97,14 +97,14 @@
     color: #1e293b;
     border-top: 2px solid #e2e8f0;
   }
-  
+
   .num-cell { font-variant-numeric: tabular-nums; text-align: right; }
 
   .chart-card {
     border-color: #f1f5f9;
     background-color: #f8fafc;
   }
-  
+
   .badge-period {
     font-weight: 600;
     background-color: var(--brand-green-soft);
@@ -227,7 +227,7 @@
                chart_labels: JSON.parse(document.getElementById('analytics-report-labels').textContent),
                datasets: JSON.parse(document.getElementById('analytics-report-datasets').textContent)
            })">
-           
+
         {{ chart_labels|json_script:"analytics-report-labels" }}
         {{ chart_datasets|json_script:"analytics-report-datasets" }}
 
@@ -247,7 +247,7 @@
                 <span class="fw-bold text-success">{{ table_summary.primary }}</span>
             </div>
           </div>
-          
+
           <div style="height: 300px; position: relative;">
             <canvas x-ref="canvas"
                     data-chart-config='{"labels": "analytics-report-labels", "datasets": "analytics-report-datasets"}'></canvas>

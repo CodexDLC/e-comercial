@@ -23,7 +23,7 @@ def order_factory(db, user):
 class TestOrderSelectors:
     def test_get_orders_list(self, order_factory, user):
         o1 = order_factory(status="pending")
-        o2 = order_factory(status="completed")
+        _o2 = order_factory(status="completed")
 
         qs = OrderSelector.get_orders_list()
         assert qs.count() == 2
