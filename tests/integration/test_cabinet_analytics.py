@@ -65,14 +65,14 @@ class AnalyticsReportsTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Revenue")
-        self.assertContains(response, "200 ₽")
+        self.assertContains(response, "$200.00")
         self.assertContains(response, "Average Order")
         self.assertNotContains(response, "Mocked analytics summary")
         self.assertNotContains(response, "All team")
         self.assertNotContains(response, "Elena S.")
         self.assertEqual(response.context["active_tab"], "revenue")
         self.assertEqual(response.context["summary_row"]["orders"], 2)
-        self.assertEqual(response.context["summary_row"]["revenue_fmt"], "200 ₽")
+        self.assertEqual(response.context["summary_row"]["revenue_fmt"], "$200.00")
 
     def test_reports_page_builds_product_and_customer_tabs_from_live_models(self) -> None:
         self.client.force_login(self.staff_user)
@@ -88,13 +88,14 @@ class AnalyticsReportsTests(TestCase):
 
         self.assertEqual(products_response.status_code, 200)
         self.assertContains(products_response, "Cascade Hops")
-        self.assertContains(products_response, "Units Sold")
-        self.assertContains(products_response, "80 ₽")
+        self.assertContains(products_response, "Units")
+        self.assertContains(products_response, "$80.00")
         self.assertNotContains(products_response, "Bookings")
 
         self.assertEqual(customers_response.status_code, 200)
         self.assertContains(customers_response, "New Users")
-        self.assertContains(customers_response, "Open Messages")
+        self.assertContains(customers_response, "Messages")
+        self.assertNotContains(customers_response, "Units")
         self.assertContains(customers_response, "Customer Activity")
         self.assertEqual(customers_response.context["summary_cards"][0]["value"], "2")
 

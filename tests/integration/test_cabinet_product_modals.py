@@ -34,7 +34,7 @@ class ProductModalFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Add Product")
-        self.assertContains(response, 'hx-target="#cabinet-modal-content"', html=False)
+        self.assertContains(response, 'hx-target="#modal-body"', html=False)
 
     def test_product_create_modal_invalid_post_renders_errors(self) -> None:
         self.client.force_login(self.staff_user)
@@ -55,19 +55,21 @@ class ProductModalFlowTests(TestCase):
         response = self.client.post(
             reverse("cabinet:product_create"),
             {
-                "name": "Vienna Malt",
+                "name": "Vienna Malt Super New",
                 "category": self.category.pk,
                 "description": "Fresh malt",
                 "price": "22.50",
                 "stock": "11",
+                "slug": "vienna-malt-super-new",
                 "is_active": "on",
+                "order": "0",
             },
             HTTP_HX_REQUEST="true",
         )
 
         self.assertEqual(response.status_code, 204)
-        self.assertEqual(response.headers["HX-Trigger"], "products-updated")
-        self.assertTrue(Product.objects.filter(name="Vienna Malt").exists())
+        self.assertEqual(response.headers["HX-Trigger"], "products-updated, close-modal")
+        self.assertTrue(Product.objects.filter(name="Vienna Malt Super New").exists())
 
     def test_product_update_modal_get_returns_edit_form(self) -> None:
         self.client.force_login(self.staff_user)
