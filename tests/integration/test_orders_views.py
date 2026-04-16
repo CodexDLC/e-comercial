@@ -69,4 +69,4 @@ class TestOrdersViews:
         data = {"full_name": "Test User"}  # Missing others
         response = client.post(url, data)
         assert response.status_code == 200
-        assert "Пожалуйста, заполните все обязательные поля" in response.content.decode("utf-8")
+        assert "Please fill in all required fields." in response.content.decode("utf-8")

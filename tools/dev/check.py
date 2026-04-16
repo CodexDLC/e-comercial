@@ -63,6 +63,7 @@ class CheckRunner(BaseCheckRunner):
 
             all_ready = False
             while time.time() - start_time < max_wait:
+                # Use --format json which outputs one JSON object per line in newer v2
                 ok, ps_out = self.docker_compose("ps --format json")
                 if not ok or not ps_out:
                     time.sleep(2)
@@ -72,16 +73,32 @@ class CheckRunner(BaseCheckRunner):
                     containers: list[dict[str, object]] = []
                     for line in ps_out.strip().split("\n"):
                         line = line.strip()
-                        if not line or not (line.startswith("{") or line.startswith("[")):
+                        # Skip empty lines or lines that clearly don't start a JSON object/array
+                        # (Docker might output warnings to stdout/stderr which get captured)
+                        if not line:
                             continue
+
+                        # Find the first occurrences of { or [ in the line to handle potential prefixed logs
+                        start_idx = line.find("{")
+                        start_idx_arr = line.find("[")
+
+                        idx = -1
+                        if start_idx != -1 and (start_idx_arr == -1 or start_idx < start_idx_arr):
+                            idx = start_idx
+                        elif start_idx_arr != -1:
+                            idx = start_idx_arr
+
+                        if idx == -1:
+                            continue
+
                         try:
-                            data = json.loads(line)
+                            data = json.loads(line[idx:])
                             containers.extend(data if isinstance(data, list) else [data])
                         except json.JSONDecodeError:
                             continue
 
                     if not containers:
-                        if int(time.time() - start_time) % 10 == 0:
+                        if int(time.time() - start_time) % 15 == 0:
                             print(f"  ...no containers found yet for project {TEST_PROJECT_NAME}")
                         time.sleep(2)
                         continue
@@ -89,11 +106,15 @@ class CheckRunner(BaseCheckRunner):
                     current_failed = []
                     container_details = []
                     for c in containers:
-                        state = str(c.get("State", "")).lower()
-                        health = str(c.get("Health", "")).lower()
-                        service = str(c.get("Service", "unknown"))
-                        
-                        container_details.append(f"{service}({state}/{health if health else 'no-hc'})")
+                        # Some versions of docker-compose use different casing for keys
+                        state = str(c.get("State", c.get("state", ""))).lower()
+                        health = str(c.get("Health", c.get("health", ""))).lower()
+                        status_str = str(c.get("Status", c.get("status", ""))).lower()
+                        service = str(c.get("Service", c.get("service", "unknown")))
+
+                        container_details.append(
+                            f"{service}({state}/{health if health else ('healthy' if '(healthy)' in status_str else 'no-hc')})"
+                        )
 
                         # If a container is restarting, it usually means it crashed
                         if "restarting" in state:
@@ -104,22 +125,25 @@ class CheckRunner(BaseCheckRunner):
                             return False
 
                         # We consider it ready ONLY if it's running AND (if it has healthcheck, it's healthy)
-                        is_ready = ("running" in state)
-                        if health and health != "healthy":
-                            is_ready = False
-                        
-                        if not is_ready:
+                        is_running = "running" in state or "up" in state
+                        # Robust health check: some Docker versions don't populate the 'Health' field reliably in JSON
+                        # but include '(healthy)' in the 'Status' string.
+                        is_healthy = not health or health == "healthy" or "(healthy)" in status_str
+
+                        if not (is_running and is_healthy):
                             current_failed.append(service)
 
-                    if int(time.time() - start_time) % 10 == 0:
-                        print(f"  ...waiting for: {', '.join(current_failed)} (Checked: {', '.join(container_details)})")
+                    if int(time.time() - start_time) % 15 == 0:
+                        print(
+                            f"  ...waiting for: {', '.join(current_failed)} (Checked: {', '.join(container_details)})"
+                        )
 
-                    if not current_failed:
+                    if not current_failed and containers:
                         self.print_success("All containers are running/healthy")
                         all_ready = True
                         break
                 except Exception as e:
-                    if int(time.time() - start_time) % 10 == 0:
+                    if int(time.time() - start_time) % 15 == 0:
                         print(f"{Colors.YELLOW}Warning: error during health check: {e}{Colors.ENDC}")
 
                 time.sleep(2)
@@ -128,7 +152,7 @@ class CheckRunner(BaseCheckRunner):
                 self.print_error(f"Timeout waiting for services after {max_wait}s")
                 # Diagnostic dump
                 _, ps_out = self.docker_compose("ps --format json")
-                print(f"{Colors.YELLOW}Final container states:{Colors.ENDC}")
+                print(f"{Colors.YELLOW}Final container states (RAW):{Colors.ENDC}")
                 print(ps_out)
                 return False
 
@@ -160,9 +184,7 @@ class CheckRunner(BaseCheckRunner):
 
             for desc, cmd in backend_checks:
                 self.print_step(f"Docker | {desc}")
-                success, out = self.run_command(
-                    f"docker exec {container_id} {cmd}", capture_output=True
-                )
+                success, out = self.run_command(f"docker exec {container_id} {cmd}", capture_output=True)
                 if not success:
                     self.print_error(f"{desc} failed:\n{out}")
                     return False
@@ -173,14 +195,8 @@ class CheckRunner(BaseCheckRunner):
             python = sys.executable
             e2e_env = os.environ.copy()
             e2e_env["E2E_BASE_URL"] = E2E_BASE_URL
-            e2e_cmd = (
-                f"{python} -m pytest tests/e2e/ -m e2e -v --no-header "
-                f"--override-ini=addopts='' "
-                f"-p no:warnings"
-            )
-            ok, out = self.run_command(
-                e2e_cmd, env=e2e_env, capture_output=ci_mode
-            )
+            e2e_cmd = f"{python} -m pytest tests/e2e/ -m e2e -v --no-header --override-ini=addopts='' -p no:warnings"
+            ok, out = self.run_command(e2e_cmd, env=e2e_env, capture_output=ci_mode)
             if not ok:
                 self.print_error(f"E2E smoke tests failed:\n{out}")
                 return False
@@ -201,11 +217,7 @@ class CheckRunner(BaseCheckRunner):
             return self.run_docker_validation(ci_mode=True)
 
         try:
-            prompt = (
-                f"\n{Colors.YELLOW}"
-                f"🚀 Run Docker validation + E2E smoke tests? [y/N]: "
-                f"{Colors.ENDC}"
-            )
+            prompt = f"\n{Colors.YELLOW}🚀 Run Docker validation + E2E smoke tests? [y/N]: {Colors.ENDC}"
             answer = input(prompt).strip().lower()
         except EOFError:
             answer = "n"
@@ -215,7 +227,6 @@ class CheckRunner(BaseCheckRunner):
 
         self.print_skip("Skipping Docker validation.")
         return True
-
 
     def run_all(self) -> None:
         """Run checks in optimal order for developer feedback:

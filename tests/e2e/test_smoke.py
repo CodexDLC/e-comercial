@@ -12,7 +12,7 @@ pytestmark = pytest.mark.e2e
 
 def test_health_endpoint(base_url: str) -> None:
     """Health endpoint must return 200 and valid JSON."""
-    r = requests.get(f"{base_url}/api/v1/health", timeout=10)
+    r = requests.get(f"{base_url}/api/v1/health/", timeout=10)
     assert r.status_code == 200
 
 
