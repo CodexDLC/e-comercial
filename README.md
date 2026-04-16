@@ -102,7 +102,7 @@ curl http://localhost:8080/api/v1/products/
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/token/ \
      -H "Content-Type: application/json" \
-     -d '{"username": "admin", "password": "password"}'
+     -d '{"username": "admin", "password": "password"}'  # pragma: allowlist secret
 ```
 
 ---

@@ -132,3 +132,8 @@ live-output-test-stages = ["unit", "integration"]
 test-paths = ["tests/unit", "tests/integration", "src/Hop-and-Barley/features"]
 test-markers = { unit = "unit", integration = "integration" }
 types-paths = ["src/Hop-and-Barley"]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+]

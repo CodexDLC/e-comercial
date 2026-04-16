@@ -43,6 +43,6 @@ python src/Hop-and-Barley/manage.py startserver
 ## 🔐 Environment Variables
 Key variables in `.env`:
 - `DJANGO_SECRET_KEY`: Security key.
-- `DATABASE_URL`: Connection string (e.g., `postgres://user:pass@localhost:5432/db`).
+- `DATABASE_URL`: Connection string (e.g., `postgres://user:pass@localhost:5432/db`). # pragma: allowlist secret
 - `REDIS_URL`: Cache and session store.
 - `CART_SESSION_ID`: Identifier for the session-based cart.
