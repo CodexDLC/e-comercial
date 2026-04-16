@@ -115,4 +115,79 @@
             closeModal();
         }
     });
+
+    // --- Projects Analytics Chart Extension ---
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('chartWidget', (config) => ({
+            config,
+            chart: null,
+            init() {
+                const ctx = this.$refs.canvas;
+                if (!ctx || typeof Chart === 'undefined') return;
+
+                const hasY1 = config.datasets && config.datasets.some(d => d.yAxisID === 'y1');
+
+                const scales = {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            font: { size: 10 },
+                            color: '#64748b',
+                            callback: (value) => {
+                                // Simple currency formatting if it's revenue
+                                if (config.title && String(config.title).toLowerCase().includes('revenue')) {
+                                    return '$' + value.toLocaleString();
+                                }
+                                return value;
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 }, color: '#64748b' }
+                    }
+                };
+
+                if (hasY1) {
+                    scales.y1 = {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        beginAtZero: true,
+                        grid: { drawOnChartArea: false },
+                        ticks: { font: { size: 10 }, color: '#64748b' }
+                    };
+                }
+
+                this.chart = new Chart(ctx, {
+                    type: config.type || 'line',
+                    data: {
+                        labels: config.chart_labels || [],
+                        datasets: config.datasets || []
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        plugins: {
+                            legend: {
+                                display: config.show_legend ?? true,
+                                position: 'top',
+                                align: 'end',
+                                labels: { boxWidth: 10, font: { size: 10 } }
+                            }
+                        },
+                        scales: scales
+                    }
+                });
+            }
+        }));
+    });
 })();

@@ -1,26 +1,137 @@
 {% load i18n %}
-<div class="modal-header">
-    <h5 class="modal-title">{% if object %}{% trans "Edit Product" %}{% else %}{% trans "Add Product" %}{% endif %}</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+{# Header — Styled to work with the absolute-positioned close button in _modal_base.html #}
+<div class="p-4 border-bottom bg-light">
+    <h5 class="fw-bold mb-0" style="color:#0f172a; font-size: 1.15rem;">
+        {% if object %}
+            <i class="bi bi-pencil-square me-2 text-primary"></i>{% trans "Edit Product" %}
+        {% else %}
+            <i class="bi bi-plus-circle me-2 text-primary"></i>{% trans "Add Product" %}
+        {% endif %}
+    </h5>
 </div>
-<form method="post" action="{{ request.path }}" enctype="multipart/form-data" hx-post="{{ request.path }}" hx-target="#cabinet-modal-content">
+
+<form method="post" action="{{ request.path }}" enctype="multipart/form-data" hx-post="{{ request.path }}" hx-target="#modal-body" class="d-flex flex-column h-100">
     {% csrf_token %}
-    <div class="modal-body">
-        {% for field in form %}
-            <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <div class="text-danger small">{{ field.errors }}</div>
-                {% endif %}
-                {% if field.help_text %}
-                    <div class="form-text text-muted small">{{ field.help_text }}</div>
-                {% endif %}
+    
+    <div class="p-4 overflow-auto" style="max-height: calc(90vh - 160px);">
+        <div class="row g-3">
+            
+            {# Name Field (Full Width) #}
+            <div class="col-12">
+                <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.name.label }}
+                </label>
+                <input type="text" name="name" id="{{ form.name.id_for_label }}" class="form-control" value="{{ form.name.value|default:'' }}" required>
+                {% if form.name.errors %}<div class="text-danger small mt-1">{{ form.name.errors }}</div>{% endif %}
             </div>
-        {% endfor %}
+
+            {# Slug Field (Full Width) #}
+            <div class="col-12">
+                <label for="{{ form.slug.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.slug.label }}
+                </label>
+                <input type="text" name="slug" id="{{ form.slug.id_for_label }}" class="form-control" value="{{ form.slug.value|default:'' }}" placeholder="product-url-slug">
+                <div class="form-text small text-muted">{% trans "Leave empty to generate from name automatically." %}</div>
+                {% if form.slug.errors %}<div class="text-danger small mt-1">{{ form.slug.errors }}</div>{% endif %}
+            </div>
+
+            {# Category Field (Half Width) #}
+            <div class="col-md-6">
+                <label for="{{ form.category.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.category.label }}
+                </label>
+                <select name="category" id="{{ form.category.id_for_label }}" class="form-select" required>
+                    {% for val, lbl in form.category.field.choices %}
+                        <option value="{{ val }}" {% if form.category.value == val|stringformat:"s" %}selected{% endif %}>{{ lbl }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.category.errors %}<div class="text-danger small mt-1">{{ form.category.errors }}</div>{% endif %}
+            </div>
+
+            {# Price Field (Quarter Width) #}
+            <div class="col-md-3">
+                <label for="{{ form.price.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.price.label }}
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">$</span>
+                    <input type="number" step="0.01" name="price" id="{{ form.price.id_for_label }}" class="form-control border-start-0" value="{{ form.price.value|default:'' }}" required>
+                </div>
+                {% if form.price.errors %}<div class="text-danger small mt-1">{{ form.price.errors }}</div>{% endif %}
+            </div>
+
+            {# Stock Field (Quarter Width) #}
+            <div class="col-md-3">
+                <label for="{{ form.stock.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.stock.label }}
+                </label>
+                <input type="number" name="stock" id="{{ form.stock.id_for_label }}" class="form-control" value="{{ form.stock.value|default:'0' }}" required>
+                {% if form.stock.errors %}<div class="text-danger small mt-1">{{ form.stock.errors }}</div>{% endif %}
+            </div>
+
+            {# Description Field (Full Width) #}
+            <div class="col-12">
+                <label for="{{ form.description.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.description.label }}
+                </label>
+                <textarea name="description" id="{{ form.description.id_for_label }}" class="form-control" rows="4">{{ form.description.value|default:'' }}</textarea>
+                {% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors }}</div>{% endif %}
+            </div>
+
+            {# Image Upload #}
+            <div class="col-12">
+                <label for="{{ form.image.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.image.label }}
+                </label>
+                <div class="card bg-light border-dashed p-3 text-center">
+                    <input type="file" name="image" id="{{ form.image.id_for_label }}" class="form-control mb-2">
+                    {% if form.instance.image %}
+                        <div class="mt-2 small text-muted">
+                            <i class="bi bi-image me-1"></i> Current: {{ form.instance.image.name|truncatechars:40 }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Specifications (Full Width) #}
+            <div class="col-12">
+                <label for="{{ form.specifications.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.specifications.label }}
+                </label>
+                <textarea name="specifications" id="{{ form.specifications.id_for_label }}" class="form-control font-monospace" rows="3" placeholder='{"Weight": "1kg", "Origin": "UK"}'>{{ form.specifications.value|default:'' }}</textarea>
+                <div class="form-text small text-muted">{% trans "Enter technical characteristics in JSON format." %}</div>
+                {% if form.specifications.errors %}<div class="text-danger small mt-1">{{ form.specifications.errors }}</div>{% endif %}
+            </div>
+
+            {# Meta Settings (Order & Active) #}
+            <div class="col-md-6">
+                <label for="{{ form.order.id_for_label }}" class="form-label fw-semibold text-muted small text-uppercase" style="letter-spacing:.04em;">
+                    {{ form.order.label }}
+                </label>
+                <input type="number" name="order" id="{{ form.order.id_for_label }}" class="form-control" value="{{ form.order.value|default:'0' }}">
+                <div class="form-text small text-muted">{% trans "Product display order in lists." %}</div>
+            </div>
+
+            <div class="col-md-6 d-flex align-items-center pt-4">
+                <div class="form-check form-switch p-2 rounded bg-light border w-100 ps-5 d-flex align-items-center">
+                    <input class="form-check-input ms-0 me-3 mt-0" type="checkbox" name="is_active" id="{{ form.is_active.id_for_label }}" style="width: 2.5em; height: 1.25em;" {% if form.is_active.value %}checked{% endif %}>
+                    <label class="form-check-label fw-semibold text-dark" for="{{ form.is_active.id_for_label }}">
+                        {{ form.is_active.label }}
+                    </label>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
-        <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+
+    {# Footer #}
+    <div class="p-4 border-top bg-light mt-auto d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-light px-4" @click="$dispatch('close-modal')">
+            {% trans "Cancel" %}
+        </button>
+        <button type="submit" class="btn btn-primary px-4 shadow-sm fw-semibold">
+             <i class="bi bi-check-lg me-1"></i>{% trans "Save Product" %}
+        </button>
     </div>
 </form>

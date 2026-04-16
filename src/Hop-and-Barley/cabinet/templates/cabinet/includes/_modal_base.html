@@ -1,0 +1,74 @@
+{% comment %}
+    Global Modal Container — project override of the library version.
+    Uses native fetch() instead of htmx.ajax() for reliable content loading.
+    Dispatch: window.dispatchEvent(new CustomEvent('open-modal', { detail: { url: '...', size: '520px' } }))
+{% endcomment %}
+
+<div x-data="{
+        isModalOpen: false,
+        url: '',
+        size: '420px',
+        loadModal(url) {
+            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r) { return r.text(); })
+                .then(function(html) {
+                    var body = document.getElementById('modal-body');
+                    if (body) {
+                        body.innerHTML = html;
+                        if (window.htmx) htmx.process(body);
+                        if (window.Alpine) Alpine.initTree(body);
+                    }
+                })
+                .catch(function() {
+                    var body = document.getElementById('modal-body');
+                    if (body) body.innerHTML = '<div class=\'p-4 text-danger small\'>Failed to load content.</div>';
+                });
+        }
+     }"
+     @open-modal.window="isModalOpen = true; url = $event.detail.url; size = $event.detail.size || '420px'; loadModal(url);"
+     @close-modal.window="isModalOpen = false; url = '';"
+     @close-modal="isModalOpen = false; url = '';"
+     class="cab-modal-root">
+
+    <!-- Overlay -->
+    <div x-cloak
+         x-show="isModalOpen"
+         x-transition:enter="transition ease-out duration-150"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-100"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="position-fixed top-0 start-0 w-100 h-100 align-items-center justify-content-center"
+         :class="isModalOpen ? 'd-flex' : 'd-none'"
+         style="background:rgba(15,23,42,.6); backdrop-filter:blur(4px); z-index:2000;"
+         @click.self="isModalOpen = false; url = '';">
+
+        <!-- Modal panel -->
+        <div x-show="isModalOpen"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             class="bg-white rounded-4 position-relative overflow-hidden"
+             :style="'width:' + size + '; max-width:94vw; min-height:150px; box-shadow:0 20px 40px rgba(15,23,42,.18);'"
+             @click.stop>
+
+            <!-- Close button -->
+            <button type="button"
+                    @click="isModalOpen = false; url = '';"
+                    class="btn-close position-absolute top-0 end-0 m-3"
+                    style="z-index:10;"
+                    aria-label="Close"></button>
+
+            <!-- Content area -->
+            <div id="modal-body" class="h-100">
+                <!-- Spinner (shown until fetch replaces this) -->
+                <div class="d-flex flex-column align-items-center justify-content-center p-5 text-center">
+                    <div class="spinner-border text-primary mb-3" role="status" style="width:2rem;height:2rem;"></div>
+                    <div class="text-secondary small fw-medium">Loading...</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

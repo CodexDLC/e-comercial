@@ -1,6 +1,6 @@
 {
     "js": {
-        "app/cabinet.js": {
+        "app/cabinet_local.js": {
             "strategy": "dependency_graph",
             "entry": [
                 "app/cabinet.entry.js"

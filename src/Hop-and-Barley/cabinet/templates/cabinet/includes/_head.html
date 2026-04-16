@@ -1,0 +1,16 @@
+{% load static %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{# 1. Library defaults (same order as package _head.html) #}
+<link rel="stylesheet" href="{% static 'cabinet/css/cab_tokens.css' %}">
+<link rel="stylesheet" href="{% static 'cabinet/css/cab_layout.css' %}">
+<link rel="stylesheet" href="{% static 'cabinet/css/cab_components.css' %}">
+<link rel="stylesheet" href="{% static 'cabinet/css/codex_cabinet.css' %}">
+
+{# 2. Project theme overrides (brand colours, client shell) #}
+<link rel="stylesheet" href="{% static 'cabinet/css/theme/tokens.css' %}">
+<link rel="stylesheet" href="{% static 'cabinet/css/theme/client.css' %}">
+
+{% block cabinet_css %}{% endblock %}
+{% block extra_css %}{% endblock %}
