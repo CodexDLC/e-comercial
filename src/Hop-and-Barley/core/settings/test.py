@@ -8,7 +8,6 @@ from pathlib import Path
 
 from .base import *  # noqa: F403
 
-
 # Base dir for templates (mirrors modules/templates.py resolution)
 _BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
