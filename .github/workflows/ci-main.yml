@@ -48,7 +48,7 @@ jobs:
           PYTHONPATH: src/Hop-and-Barley
           DJANGO_SETTINGS_MODULE: core.settings.test
           SECRET_KEY: "ci_secret_key" # pragma: allowlist secret
-        run: python -m mypy src/Hop-and-Barley
+        run: python -m mypy src/Hop-and-Barley --show-traceback
 
       - name: Security Audit (pip-audit)
         run: python -m pip_audit --local

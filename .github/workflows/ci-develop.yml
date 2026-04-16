@@ -33,7 +33,7 @@ jobs:
           PYTHONPATH: src/Hop-and-Barley
           DJANGO_SETTINGS_MODULE: core.settings.test
           SECRET_KEY: "ci_secret_key" # pragma: allowlist secret
-        run: python -m mypy src/Hop-and-Barley
+        run: python -m mypy src/Hop-and-Barley --show-traceback
 
       - name: Run Trivy (FS Scan)
         uses: aquasecurity/trivy-action@master

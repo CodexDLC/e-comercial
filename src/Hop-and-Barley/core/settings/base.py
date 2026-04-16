@@ -5,12 +5,14 @@ Ready for Docker Compose, Swarm, and Kubernetes.
 """
 
 import os
+import sys
 from pathlib import Path
 
 import django_stubs_ext
 from dotenv import load_dotenv
 
-django_stubs_ext.monkeypatch()
+if "mypy" not in sys.modules and "mypy_django_plugin" not in sys.modules:
+    django_stubs_ext.monkeypatch()
 
 # ═══════════════════════════════════════════
 # Paths & Project Identity
