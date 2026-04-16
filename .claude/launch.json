@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "django",
+      "runtimeExecutable": "echo",
+      "runtimeArgs": ["server already running"],
+      "port": 8080,
+      "autoPort": false
+    }
+  ]
+}

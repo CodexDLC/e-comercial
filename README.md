@@ -50,6 +50,14 @@ python src/Hop-and-Barley/manage.py migrate
 python src/Hop-and-Barley/manage.py startserver
 ```
 
+### 4. Генерация демо-данных
+
+Для наполнения базы данных демонстрационными заказами, отзывами и аналитикой запустите скрипт:
+
+```bash
+python src/Hop-and-Barley/gen_demo.py
+```
+
 ---
 
 ## 🎨 Работа с фронтендом и ассетами

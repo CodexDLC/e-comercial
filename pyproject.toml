@@ -10,7 +10,7 @@ dependencies = [
     "psycopg2-binary",
     "loguru",
     "redis>=5.0",
-    "codex-django>=0.4.2",
+    "codex-django>=0.4.3",
     "codex-django-cli",
     "codex-core",
     "django-allauth[socialaccount]",

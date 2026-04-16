@@ -22,7 +22,24 @@
       "Bash(python -m pytest tests/unit/ -m unit -p no:warnings --tb=no)",
       "Bash(sort -t% -k1 -n)",
       "Bash(uv sync:*)",
-      "Bash(pytest)"
+      "Bash(pytest)",
+      "Bash(cat C:/install/projects/lab/e-comercial/.venv/Lib/site-packages/codex_django-*.dist-info/METADATA)",
+      "Bash(python -c ':*)",
+      "Bash(python src/Hop-and-Barley/manage.py makemigrations system --settings=core.settings.dev)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8080/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L http://127.0.0.1:8080/accounts/login/)",
+      "Bash(curl -s -L http://127.0.0.1:8080/)",
+      "Bash(curl -s http://127.0.0.1:8080/en/cabinet/ -o /dev/null -w \"%{http_code}\\\\n%{redirect_url}\")",
+      "Read(//c/install/projects/**)",
+      "Bash(grep -E \"\\\\.\\(html|js|py\\)$\")",
+      "Bash(xargs ls:*)",
+      "Bash(xargs cat:*)",
+      "Bash(find /c/install/projects/clients/lily_website/archive -name \"base_cabinet.html\" -exec cat {} \\\\;)",
+      "Bash(wc -l /c/install/projects/clients/lily_website/src/lily_backend/static/js/vendor/*.js)",
+      "Read(//tmp/**)",
+      "Bash(ls CHANGELOG*)"
     ]
   }
 }

@@ -234,7 +234,7 @@ wheels = [
 
 [[package]]
 name = "codex-django"
-version = "0.4.2"
+version = "0.4.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "codex-core" },
@@ -255,9 +255,9 @@ dependencies = [
     { name = "pillow" },
     { name = "redis" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4f/17/c2cd577e6338de82bab754debb0e71207b70d7d11c15fca45b661ca148d5/codex_django-0.4.2.tar.gz", hash = "sha256:d17bf124371cd425ae2fbef25663c6fe6f802d7aa42c73fcd565cb241882030f", size = 1357929, upload-time = "2026-04-11T17:06:58.819Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e2/b6/3c78f990f54c52ffd065802fad97d3c5d016c8d8a9105547886dad446a1a/codex_django-0.4.3.tar.gz", hash = "sha256:91d5ca9ad19d9d72f2e40bc0e2f88f6341748ea34836521551b29b0e66964328", size = 1358399, upload-time = "2026-04-16T09:18:32.951Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/44/70/224659b1090a5ad01ea044718132c665e55c4f6206760352ed4b8ea01809/codex_django-0.4.2-py3-none-any.whl", hash = "sha256:c2654f7f1662a3230a16a43dce5bf52d911d24d7b5d34b95f10fce3b38ef71a0", size = 1263938, upload-time = "2026-04-11T17:06:56.843Z" },
+    { url = "https://files.pythonhosted.org/packages/09/3c/6496c0bec8b057b503319dd34a5fafec8b4efea3c718c1cb1053c71e6c59/codex_django-0.4.3-py3-none-any.whl", hash = "sha256:684b5f1f49e3beb76f7b940e0f50e41981ea68cfd9340e76ff5fd0465df7f81e", size = 1264234, upload-time = "2026-04-16T09:18:30.816Z" },
 ]
 
 [[package]]
@@ -811,6 +811,7 @@ dependencies = [
     { name = "django" },
     { name = "django-allauth", extra = ["socialaccount"] },
     { name = "django-filter" },
+    { name = "django-stubs-ext" },
     { name = "djangorestframework" },
     { name = "djangorestframework-simplejwt" },
     { name = "drf-spectacular" },
@@ -844,7 +845,7 @@ dev = [
 requires-dist = [
     { name = "bandit", marker = "extra == 'dev'" },
     { name = "codex-core" },
-    { name = "codex-django", specifier = ">=0.4.2" },
+    { name = "codex-django", specifier = ">=0.4.3" },
     { name = "codex-django-cli" },
     { name = "cryptography", specifier = ">=46.0.7" },
     { name = "detect-secrets", marker = "extra == 'dev'" },
@@ -853,6 +854,7 @@ requires-dist = [
     { name = "django-allauth", extras = ["socialaccount"] },
     { name = "django-filter" },
     { name = "django-stubs", marker = "extra == 'dev'" },
+    { name = "django-stubs-ext" },
     { name = "djangorestframework" },
     { name = "djangorestframework-simplejwt" },
     { name = "djangorestframework-stubs", marker = "extra == 'dev'" },

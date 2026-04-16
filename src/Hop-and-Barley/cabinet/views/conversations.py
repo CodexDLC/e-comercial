@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
@@ -9,7 +10,7 @@ from django.views.generic import TemplateView
 from cabinet.services.conversations import ConversationsService
 
 
-class InboxView(TemplateView):
+class InboxView(LoginRequiredMixin, TemplateView):
     template_name = "cabinet/conversations/inbox.html"
     paginate_by = 50
 
@@ -37,7 +38,7 @@ class AllMessagesView(InboxView):
         return context
 
 
-class ThreadView(TemplateView):
+class ThreadView(LoginRequiredMixin, TemplateView):
     template_name = "cabinet/conversations/thread.html"
 
     def dispatch(self, request: Any, *args: Any, **kwargs: Any) -> Any:
@@ -50,7 +51,7 @@ class ThreadView(TemplateView):
         return context
 
 
-class ComposeView(TemplateView):
+class ComposeView(LoginRequiredMixin, TemplateView):
     template_name = "cabinet/conversations/compose.html"
 
     def dispatch(self, request: Any, *args: Any, **kwargs: Any) -> Any:
@@ -62,20 +63,20 @@ class ComposeView(TemplateView):
         return redirect(result["redirect_url"])
 
 
-class ThreadReplyActionView(TemplateView):
+class ThreadReplyActionView(LoginRequiredMixin, TemplateView):
     def post(self, request: Any, *args: Any, **kwargs: Any) -> HttpResponse:
         body = request.POST.get("body", "").strip()
         result = ConversationsService.reply_to_thread(pk=self.kwargs["pk"], body=body, user=request.user)
         return redirect(result["redirect_url"])
 
 
-class ThreadActionView(TemplateView):
+class ThreadActionView(LoginRequiredMixin, TemplateView):
     def post(self, request: Any, *args: Any, **kwargs: Any) -> HttpResponse:
         result = ConversationsService.perform_thread_action(pk=self.kwargs["pk"], action=self.kwargs["action"])
         return redirect(result["redirect_url"])
 
 
-class InboxBulkActionView(TemplateView):
+class InboxBulkActionView(LoginRequiredMixin, TemplateView):
     def post(self, request: Any, *args: Any, **kwargs: Any) -> HttpResponse:
         result = ConversationsService.perform_bulk_action(request=request)
         return redirect(result["redirect_url"])

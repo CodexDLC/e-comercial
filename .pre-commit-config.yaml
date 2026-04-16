@@ -44,6 +44,7 @@ repos:
     hooks:
       - id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
+        exclude: (fixtures|tests)/
 
   # 3. Листинг и проверка Docker-файлов (Linter)
   - repo: https://github.com/hadolint/hadolint

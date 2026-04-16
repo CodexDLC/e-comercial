@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from typing import Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from cabinet.services.users import UserService
 
 
-class UserListView(TemplateView):
+class UserListView(LoginRequiredMixin, TemplateView):
     """
     Modular user list view for the cabinet dashboard.
 
