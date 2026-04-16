@@ -12,7 +12,7 @@ FIELD_ENCRYPTION_KEY = os.environ.get("FIELD_ENCRYPTION_KEY", "")
 DEBUG = os.environ.get("DEBUG", "True").lower() in ("true", "1", "yes")
 
 # --- Smart ALLOWED_HOSTS ---
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend"]
+ALLOWED_HOSTS = ["*"]
 
 env_hosts = os.environ.get("ALLOWED_HOSTS", "")
 if env_hosts:

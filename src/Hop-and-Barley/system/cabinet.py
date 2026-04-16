@@ -83,12 +83,6 @@ declare(
             order=31,
         ),
         DashboardWidget(
-            template="cabinet/widgets/donut.html",
-            context_key="orders_donut",
-            col="col-xl-4 col-lg-5",
-            order=33,
-        ),
-        DashboardWidget(
             template="cabinet/widgets/list.html",
             context_key="top_products",
             col="col-xl-4 col-lg-6",

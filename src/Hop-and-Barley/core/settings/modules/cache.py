@@ -31,16 +31,14 @@ else:
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": REDIS_URL,
         "KEY_PREFIX": PROJECT_NAME,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
     }
 }
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# cached_db: сначала Redis, при недоступности — fallback на БД
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 SESSION_CACHE_ALIAS = "default"
 SESSION_COOKIE_NAME = f"sessionid_{PROJECT_NAME}"
 
