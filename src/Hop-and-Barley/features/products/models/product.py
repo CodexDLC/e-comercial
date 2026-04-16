@@ -27,18 +27,18 @@ class Product(
         Category,
         on_delete=models.CASCADE,
         related_name="products",
-        verbose_name=_("Категория"),
+        verbose_name=_("Category"),
     )
-    name = models.CharField(_("Название"), max_length=200)
-    description = models.TextField(_("Описание"), blank=True)
-    price = models.DecimalField(_("Цена"), max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField(_("Остаток на складе"), default=0)
-    image = models.ImageField(_("Изображение товара"), upload_to="products/", blank=True, null=True)
-    specifications = models.JSONField(_("Технические характеристики"), default=dict, blank=True)
+    name = models.CharField(_("Name"), max_length=200)
+    description = models.TextField(_("Description"), blank=True)
+    price = models.DecimalField(_("Price"), max_digits=10, decimal_places=2)
+    stock = models.PositiveIntegerField(_("Stock"), default=0)
+    image = models.ImageField(_("Product Image"), upload_to="products/", blank=True, null=True)
+    specifications = models.JSONField(_("Specifications"), default=dict, blank=True)
 
     class Meta:
-        verbose_name = _("Товар")
-        verbose_name_plural = _("Товары")
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
         ordering: typing.ClassVar[list[str]] = ["order", "name"]
 
     def __str__(self) -> str:

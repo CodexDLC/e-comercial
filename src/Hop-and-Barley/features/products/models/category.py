@@ -21,22 +21,22 @@ class Category(
 ):
     """Product Category Model."""
 
-    name = models.CharField(_("Название"), max_length=150)
+    name = models.CharField(_("Name"), max_length=150)
     is_featured = models.BooleanField(default=False, help_text="Show on the home page Bento grid")
-    image = models.ImageField(_("Изображение"), upload_to="categories/", blank=True, null=True)
-    description = models.TextField(_("Описание"), blank=True)
+    image = models.ImageField(_("Image"), upload_to="categories/", blank=True, null=True)
+    description = models.TextField(_("Description"), blank=True)
     parent = models.ForeignKey(
         "self",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="children",
-        verbose_name=_("Родительская категория"),
+        verbose_name=_("Parent Category"),
     )
 
     class Meta:
-        verbose_name = _("Категория")
-        verbose_name_plural = _("Категории")
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
         ordering: typing.ClassVar[list[str]] = ["order", "name"]
 
     def __str__(self) -> str:

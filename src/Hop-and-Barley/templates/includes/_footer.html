@@ -4,12 +4,34 @@
     <img src="{% static 'img/background/image-footer.svg' %}" alt="Hop & Barley Hops Logo" class="footer__hops-logo">
     <nav class="footer__nav">
         <ul>
-            <li><a href="#">Contact</a></li>
+            <li><a href="{% url 'main:contacts' %}">{% trans "Contact" %}</a></li>
             <li><a href="#">FAQ</a></li>
-            <li><a href="#">Community</a></li>
-            <li><a href="#">Resources</a></li>
-            <li><a href="#">License</a></li>
+            <li><a href="#">{% trans "Community" %}</a></li>
         </ul>
     </nav>
-    <p class="footer__copyright">© Hop & Barley 2025. All rights reserved</p>
+    {% if site_settings.instagram_url or site_settings.telegram_url or site_settings.whatsapp_url %}
+    <div class="footer__social">
+        {% if site_settings.instagram_url %}
+        <a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+        {% endif %}
+        {% if site_settings.telegram_url %}
+        <a href="{{ site_settings.telegram_url }}" target="_blank" rel="noopener" aria-label="Telegram">
+            <i class="fa-brands fa-telegram"></i>
+        </a>
+        {% endif %}
+        {% if site_settings.whatsapp_url %}
+        <a href="{{ site_settings.whatsapp_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+        {% endif %}
+        {% if site_settings.youtube_url %}
+        <a href="{{ site_settings.youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube">
+            <i class="fa-brands fa-youtube"></i>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+    <p class="footer__copyright">© {{ site_settings.company_name|default:"Hop & Barley" }} 2025. {% trans "All rights reserved" %}</p>
 </footer>

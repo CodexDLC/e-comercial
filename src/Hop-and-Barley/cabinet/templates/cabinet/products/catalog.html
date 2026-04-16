@@ -12,6 +12,22 @@
 </style>
 {% endblock %}
 
+{% block extra_js %}
+<script>
+document.body.addEventListener('click', function(e) {
+    const btn = e.target.closest('[data-modal-url]');
+    if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const url = btn.getAttribute('data-modal-url');
+        window.dispatchEvent(new CustomEvent('open-modal', {
+            detail: { url: url, size: btn.dataset.modalSize || '520px' }
+        }));
+    }
+});
+</script>
+{% endblock %}
+
 {% block cabinet_content %}
 <div class="space-y-6">
   {# Header #}

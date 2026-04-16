@@ -277,19 +277,40 @@
                     </div>
 
                     <div class="contact-item">
-                        <div class="item-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="item-icon"><i class="fa-solid fa-clock"></i></div>
                         <div class="item-content">
-                            <h3>{% trans "Office" %}</h3>
-                            <p>Malt District, 808 Tower<br/>Berlin, Germany</p>
+                            <h3>{% trans "Working Hours" %}</h3>
+                            <p>{{ site_settings.working_hours|default:_("Mon–Fri 9:00–20:00") }}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="social-links">
-                    <a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="social-btn"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="#" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="#" class="social-btn"><i class="fa-brands fa-discord"></i></a>
+                    {% if site_settings.instagram_url %}
+                    <a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" class="social-btn">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    {% endif %}
+                    {% if site_settings.telegram_url %}
+                    <a href="{{ site_settings.telegram_url }}" target="_blank" rel="noopener" class="social-btn">
+                        <i class="fa-brands fa-telegram"></i>
+                    </a>
+                    {% endif %}
+                    {% if site_settings.whatsapp_url %}
+                    <a href="{{ site_settings.whatsapp_url }}" target="_blank" rel="noopener" class="social-btn">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                    {% endif %}
+                    {% if site_settings.youtube_url %}
+                    <a href="{{ site_settings.youtube_url }}" target="_blank" rel="noopener" class="social-btn">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                    {% endif %}
+                    {% if site_settings.tiktok_url %}
+                    <a href="{{ site_settings.tiktok_url }}" target="_blank" rel="noopener" class="social-btn">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+                    {% endif %}
                 </div>
             </div>
 

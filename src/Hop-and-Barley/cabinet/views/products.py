@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView
@@ -7,7 +8,7 @@ from django.views.generic import CreateView, ListView, UpdateView
 from features.products.models import Category, Product
 
 
-class ProductCatalogListView(ListView[Product]):
+class ProductCatalogListView(LoginRequiredMixin, ListView[Product]):
     model = Product
     template_name = "cabinet/products/catalog.html"
     context_object_name = "products"
@@ -37,9 +38,9 @@ class ProductCatalogListView(ListView[Product]):
         return context
 
 
-class ProductCreateView(CreateView[Product, Any]):
+class ProductCreateView(LoginRequiredMixin, CreateView[Product, Any]):
     model = Product
-    fields = ("name", "category", "description", "price", "stock", "image", "is_active")
+    fields = ("name", "slug", "category", "description", "price", "stock", "image", "specifications", "is_active", "order")
     template_name = "cabinet/forms/modal_form.html"
     success_url = reverse_lazy("cabinet:product_catalog")
 
@@ -52,13 +53,13 @@ class ProductCreateView(CreateView[Product, Any]):
         if self.request.headers.get("HX-Request"):
             from django.http import HttpResponse
 
-            return HttpResponse(status=204, headers={"HX-Trigger": "products-updated"})
+            return HttpResponse(status=204, headers={"HX-Trigger": "products-updated, close-modal"})
         return response
 
 
-class ProductUpdateView(UpdateView[Product, Any]):
+class ProductUpdateView(LoginRequiredMixin, UpdateView[Product, Any]):
     model = Product
-    fields = ("name", "category", "description", "price", "stock", "image", "is_active")
+    fields = ("name", "slug", "category", "description", "price", "stock", "image", "specifications", "is_active", "order")
     template_name = "cabinet/forms/modal_form.html"
     success_url = reverse_lazy("cabinet:product_catalog")
 
@@ -71,5 +72,5 @@ class ProductUpdateView(UpdateView[Product, Any]):
         if self.request.headers.get("HX-Request"):
             from django.http import HttpResponse
 
-            return HttpResponse(status=204, headers={"HX-Trigger": "products-updated"})
+            return HttpResponse(status=204, headers={"HX-Trigger": "products-updated, close-modal"})
         return response
