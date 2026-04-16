@@ -6,7 +6,9 @@ from urllib.parse import urlparse
 # ═══════════════════════════════════════════
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-CHANGE-ME")
-FIELD_ENCRYPTION_KEY = os.environ.get("FIELD_ENCRYPTION_KEY", "K7cDmiURY8qm1DcZdEs2FQZecTQf8Z2pwJrYEZV4NRc=") # pragma: allowlist secret
+FIELD_ENCRYPTION_KEY = os.environ.get(
+    "FIELD_ENCRYPTION_KEY", "K7cDmiURY8qm1DcZdEs2FQZecTQf8Z2pwJrYEZV4NRc="
+)  # pragma: allowlist secret
 
 # Main switch for the whole system
 DEBUG = os.environ.get("DEBUG", "True").lower() in ("true", "1", "yes")
