@@ -1,41 +1,44 @@
 [
   {
     "model": "orders.order",
-    "pk": "a1b2c3d4-e5f6-7890-abcd-123456789001",
+    "pk": "d3b1a2c4-e5f6-7890-abcd-123456789001",
     "fields": {
-      "id": "a1b2c3d4-e5f6-7890-abcd-123456789001",
+      "id": "d3b1a2c4-e5f6-7890-abcd-123456789001",
       "user": 2,
       "status": "delivered",
-      "total_price": "12.98",
+      "total_price": "11.98",
       "shipping_address": "London, Baker St, 221B",
       "contact_phone": "+123456789",
-      "created_at": "2026-04-01T10:00:00Z"
+      "created_at": "2026-04-01T10:00:00Z",
+      "updated_at": "2026-04-01T10:00:00Z"
     }
   },
   {
     "model": "orders.order",
-    "pk": "a1b2c3d4-e5f6-7890-abcd-123456789002",
+    "pk": "f8e7d6c5-b4a3-2c1d-0e9f-8a7b6c5d4e32",
     "fields": {
-      "id": "a1b2c3d4-e5f6-7890-abcd-123456789002",
+      "id": "f8e7d6c5-b4a3-2c1d-0e9f-8a7b6c5d4e32",
       "user": 3,
       "status": "shipped",
-      "total_price": "60.00",
+      "total_price": "13.50",
       "shipping_address": "Oxford, High St, 10",
       "contact_phone": "+987654321",
-      "created_at": "2026-04-05T12:00:00Z"
+      "created_at": "2026-04-05T12:00:00Z",
+      "updated_at": "2026-04-05T12:00:00Z"
     }
   },
   {
     "model": "orders.order",
-    "pk": "a1b2c3d4-e5f6-7890-abcd-123456789003",
+    "pk": "a9b8c7d6-e5f4-3210-9876-543210abcdef",
     "fields": {
-      "id": "a1b2c3d4-e5f6-7890-abcd-123456789003",
+      "id": "a9b8c7d6-e5f4-3210-9876-543210abcdef",
       "user": 4,
       "status": "processing",
-      "total_price": "25.00",
+      "total_price": "12.50",
       "shipping_address": "Cambridge, Trinity St, 5",
       "contact_phone": "+1122334455",
-      "created_at": "2026-04-10T15:30:00Z"
+      "created_at": "2026-04-10T15:30:00Z",
+      "updated_at": "2026-04-10T15:30:00Z"
     }
   }
 ]

@@ -29,6 +29,11 @@ class OrderItem(models.Model):
         verbose_name = _("Позиция заказа")
         verbose_name_plural = _("Позиции заказа")
 
+    @property
+    def subtotal(self) -> float:
+        """Calculate the subtotal for this item."""
+        return self.quantity * self.price
+
     def __str__(self) -> str:
         if self.product:
             return f"{self.quantity} x {self.product.name}"

@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 from uuid import UUID
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -12,7 +13,7 @@ from cabinet.services.orders import OrderCabinetService
 from features.orders.services.order import OrderService
 
 
-class OrdersManagementView(TemplateView):
+class OrdersManagementView(LoginRequiredMixin, TemplateView):
     """View to list all orders for staff."""
 
     template_name = "cabinet/orders/list.html"
@@ -37,7 +38,7 @@ class OrdersManagementView(TemplateView):
         return context
 
 
-class OrderDetailView(TemplateView):
+class OrderDetailView(LoginRequiredMixin, TemplateView):
     """View to show full order detail for staff processing."""
 
     template_name = "cabinet/orders/detail.html"
@@ -61,7 +62,7 @@ class OrderDetailView(TemplateView):
         return context
 
 
-class OrderStatusUpdateView(View):
+class OrderStatusUpdateView(LoginRequiredMixin, View):
     """HTMX view to update the status of an order."""
 
     def post(self, request: Any, *args: Any, **kwargs: Any) -> Any:
