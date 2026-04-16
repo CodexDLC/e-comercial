@@ -39,7 +39,10 @@ elif IS_DOCKER and DEBUG:
 else:
     # Fallback to SQLite for local development without Docker
     data_dir = BASE_DIR.parent.parent / "data" / "db"
-    data_dir.mkdir(parents=True, exist_ok=True)
+    import sys
+
+    if "mypy" not in sys.modules and "mypy_django_plugin" not in sys.modules:
+        data_dir.mkdir(parents=True, exist_ok=True)
 
     DATABASES = {
         "default": {
